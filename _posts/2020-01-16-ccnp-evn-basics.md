@@ -11,9 +11,7 @@ Well if you're currently studying for the CCNP Route exam, then objective 4.3 De
 
 Imagine a hyper visor (Vmware or Hyper-V) where we allocate resources of the host to multiple VMs to run multiple services or servers on the same device. Now imagine that with a router but purely running multiple routing table instances instead of one big global routing table. We virtually create routing tables (or VRFs) which store routing information so they are completely independent. Take a look at the image below, this is a great example to first show someone who hasn't even heard of VRF:
 
-(/img/2020-01-16-ccnp-evn-basics/ccnp-evn-topology.JPG)
-![test](/img/2020-01-16-ccnp-evn-basics/ccnp-evn-topology.JPG)
-(img/2020-01-16-ccnp-evn-basics/ccnp-evn-topology.JPG)
+![EVN Topology](/img/2020-01-16-ccnp-evn-basics/ccnp-evn-topology.JPG)
 
 So imagine we put R1s interface connecting to CUSTOMER-A Site 1 into a VRF, and then R1s interface connecting to CUSTOMER-B Site 1 into a different VRF. The global routing table (show ip route) will currently just show the interface connecting to R2. If we look at the routing table for VRF-A on R1, we can see CUSTOMER-As subnets and the same with VRF-B/CUSTOMER-B.
 
