@@ -38,13 +38,14 @@ Because we define the vnet tag in a VRF, if a router receives traffic for vnet 1
 
  
 Enough theory, let's look at some basic configuration:
-**R1**
+
+## R1
 ~~~
 interface GigabitEthernet0/0
  vnet trunk
  ip address 10.0.0.1 255.255.255.252
 ~~~
-**R2**
+## R2
 ~~~
 interface GigabitEthernet0/0
  vnet trunk
@@ -53,7 +54,7 @@ interface GigabitEthernet0/0
 
 The link between R1 and R2 has now been configured as a VNET Trunk, so let's create the VRFs and define a TAG for the traffic in VRF: CUSTOMER-A as 100, and VRF: CUSTOMER-B as 200. We'll also use the command 'address-family ipv4' otherwise we won't be able to configure an IP address on the interface that we put into the VRF:
 
-**R1**
+## R1
 ~~~
 vrf definition CUSTOMER-A
  vnet tag 100
@@ -63,7 +64,7 @@ vrf definition CUSTOMER-B
  vnet tag 200
  address-family ipv4
 ~~~
-**R2**
+## R2
 ~~~
 vrf definition CUSTOMER-A
  vnet tag 100
@@ -76,7 +77,7 @@ vrf definition CUSTOMER-B
 
 Let's quickly configure the interfaces for CUSTOMER-A on R1 and R2, we'll also quickly create an OSPF process for both VRFs so we can establish a neighborship between both VRFs.
 
-**R1**
+## R1
 ~~~
 interface GigabitEthernet0/1
  vrf forwarding CUSTOMER-A
@@ -89,7 +90,7 @@ router ospf 10 vrf CUSTOMER-A
 router ospf 20 vrf CUSTOMER-B
  network 10.0.0.1 0.0.0.0 area 0
 ~~~
-**R2**
+## R2
 ~~~
 interface GigabitEthernet0/1
  vrf forwarding CUSTOMER-A
@@ -114,7 +115,7 @@ interface Loopback0
  ip ospf 1 area 0​
 ~~~
 
-IP Routing table confirmation on CUS-A-2:
+## IP Routing table confirmation on CUS-A-2:
 ~~~
 CUS-A-2#show ip route
 O        10.0.0.0/24 [110/4] via 192.168.2.1, 00:07:06, GigabitEthernet0/0
