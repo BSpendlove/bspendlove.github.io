@@ -1,16 +1,13 @@
 ---
 layout: page
-title: About me
-subtitle: Why you'd want to go on a date with me
+title: get_about_me()
+subtitle: HTTP Response 200: OK
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+Hi, I'm Brandon.
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+This is a blog where I either express my own expertise on topics related around my job/interests or use as a personal notebook related to networking, virtualization, programming, whatever... you name it.
 
-What else do you need?
+I get excited talking about protocols, packet header formats, fibre standards, strings, integers and food.
 
-### my history
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](http://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+Feel free to contact me at brandon.spendlove [at] veesix-networks.co.uk if you find my blog interesting or want to correct a mistake...
