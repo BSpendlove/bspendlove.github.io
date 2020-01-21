@@ -41,23 +41,7 @@ def netmiko_get_facts(ipaddr, username, password, secret):
               'version': '16.6.3'}]}
 ~~~
 
-This function will be used when rendering the HTML template in our Flask APP script. Let's create a quick HTML template to render our output, we'll display the hostname and run through a loop to display the platform, IOS version, serial number and current IOS image.
-
-~~~
-<html>
-    <body>
-        <div class="intf">
-			{% for device in devices %}
-			<h3>{{ device.hostname }}</h3>
-			<p>Hardware Platform: {{ device.hardware }}</p>
-			<p>IOS Version: {{ device.version }}</p>
-			<p>Serial Number: {{ device.serial }}</p>
-			<p>Running IOS Image: {{ device.running_image }}</p>
-			{% endfor %}
-		</div>
-    </body>
-</html>
-~~~
+This function will be used when rendering the HTML template in our Flask APP script.
 
 Our flask run file will just ensure that the netmiko function we have created will pass the data into the template renderer and display when we try to reach our local web page:
 ~~~
