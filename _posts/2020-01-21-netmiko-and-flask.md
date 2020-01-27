@@ -67,3 +67,4 @@ def index():
     return render_template('index.html', title='Home', devices=devices)
 {% endhighlight %}
 
+TO be updated in the future...
