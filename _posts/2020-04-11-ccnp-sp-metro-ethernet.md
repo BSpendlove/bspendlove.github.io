@@ -25,7 +25,7 @@ Here is the first few lines on Wikipedia about a Metropolitan Area:
 
 Let's assume with some basic fundamental knowledge, as a service provider you could offer a Metro Ethernet service by connecting a customer to a switch (via Copper or Fibre) in a local pop/datacenter and run dark fibre between a few streets to another switch located in another pop/datacenter, put the customer into a VLAN and call it a Metro Ethernet Service right?
 
-![Big Brain MetroE Solution](img/2020-04-11-ccnp-sp-metro-ethernet/big-brain-solution.JPG)
+![Big Brain MetroE Solution](/img/2020-04-11-ccnp-sp-metro-ethernet/big-brain-solution.JPG)
 
 So that was an easy solution? Oh the customer wants to add more sites? That's fine... Let's just... ahhh sh*t. What went wrong?
 
@@ -68,7 +68,7 @@ The difference between E-Line and VPWS is not very clear at the moment, but it s
 The MEF actually describes an E-Line as a Service Type that is a basis for a broad range of services based on a P2P EVC (Ethernet Virtual Circuit), an E-LAN as a multipoint to multipoint service and E-Tree as a 'rooted' multipoint service.
 
 ### Partially Meshed E-LAN Example
-![E-LAN Partial Mesh](img/2020-04-11-ccnp-sp-metro-ethernet/e-lan-partially-meshed.JPG)
+![E-LAN Partial Mesh](/img/2020-04-11-ccnp-sp-metro-ethernet/e-lan-partially-meshed.JPG)
 
 So... what is VPLS and let's compared it to MEF's E-LAN explanation...
 
@@ -76,7 +76,7 @@ Wikipedia: "Virtual Private LAN Service (VPLS) is a way to provide Ethernet-base
 
 MEF E-LAN: "Any Ethernet Service that has the EVC Type Service Attribute equal to Multipoint-to-Multipoint is classified as an Ethernet LAN (E-LAN) Service Type. "
 
-![u fokin wot m8](img/2020-04-11-ccnp-sp-metro-ethernet/jc-wtf.JPG)
+![u fokin wot m8](/img/2020-04-11-ccnp-sp-metro-ethernet/jc-wtf.JPG)
 
 This concludes my final opinion:
 
