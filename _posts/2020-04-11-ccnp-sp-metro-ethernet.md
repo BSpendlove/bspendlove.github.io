@@ -44,15 +44,19 @@ So where did Metro Ethernet come from? A ground called Metro Ethernet Forum (MEF
 
 MEF focused on standardizing 3 main key services that can be used in a Metro Ethernet service, these are:
 
-1) E-Line
-2) E-LAN
-3) E-Tree
+**1)** E-Line
+
+**2)** E-LAN
+
+**3)** E-Tree
 
 Think of these services as:
 
-1) Point to Point Network (VPWS)
-2) Multipoint LAN (fully meshed VPLS)
-3) E-Tree (partially meshed VPLS, like a hub-spoke topology)
+**1)** Point to Point Network (VPWS)
+
+**2)** Multipoint LAN (fully meshed VPLS)
+
+**3)** E-Tree (partially meshed VPLS, like a hub-spoke topology)
 
 These services can further be extended to provide sub-services, for example:
 
