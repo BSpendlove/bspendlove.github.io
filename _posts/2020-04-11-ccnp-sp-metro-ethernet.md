@@ -38,7 +38,7 @@ I would like to share some questions that I asked myself to determine why/when y
 - Is Metro Ethernet a solution that we implement on it's own or with other technologies/protocols?
 - VPLS is practically just an enhanced version of Metro Ethernet...
 
-So where did Metro Ethernet come from? A ground called Metro Ethernet Forum (MEF) decided to release a framework and define the services that a service provider could provide to customers looking for services such as Ethernet First Mile while ensuring that the framework meets some kind of standard. (such as the standards developed by IEEE and IETF)
+So where did Metro Ethernet come from? A group called Metro Ethernet Forum (MEF) decided to release a framework and define the services that a service provider could provide to customers looking for services such as Ethernet First Mile while ensuring that the framework meets some kind of standard. (such as the standards developed by IEEE and IETF)
 
 ### ME Standards
 
@@ -80,7 +80,8 @@ MEF E-LAN: "Any Ethernet Service that has the EVC Type Service Attribute equal t
 
 This concludes my final opinion:
 
-MEF is like that vegan hippie that tries to take a Gregs sausage roll (eg. VPLS), and call it a Vegan Sausage roll (eg. E-LAN) because they kind of don't like the name but can't come up with something new... (Kidding! but IETF calls it VPLS, MEF calls it E-LAN.. They're the same thing, VPLS sounds better and I've never ever heard anyone reference any Ethernet transport services as Metro Ethernet, so I'm on the blue side and will never refer to E-Line/E-Lan/E-Tree)
+MEF is like that person who asks if you'd like a glass of H 2O whereas IETF is the person that asks you if you'd like a glass of water... (Concept credit to Christa)
+(Kidding! but IETF calls it VPLS, MEF calls it E-LAN.. They're the same thing, VPLS sounds better and I've never ever heard anyone reference any Ethernet transport services as Metro Ethernet, so I'm on the blue side and will never refer to E-Line/E-Lan/E-Tree)
 
 What a waste of my study time, happy studying!
 
