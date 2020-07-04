@@ -1,6 +1,6 @@
 ﻿---
 layout: post
-title: Cisco XR YDK Useful Moduels
+title: Cisco XR YDK Useful Modules
 subtitle: A list and examples of useful modules in Python
 comments: true
 ---
