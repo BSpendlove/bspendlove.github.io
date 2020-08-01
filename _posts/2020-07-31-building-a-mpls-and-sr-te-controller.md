@@ -15,7 +15,7 @@ For the past few weeks, I've been looking for a personal project to improve my k
 
 You can read up about RSVP, SIDs, IS-IS TLVs, OSPF LSA Types, PCEP, Offline Computation but I'm trying to take a fairly simple approach to engineer traffic in a lab network with the use of Python, containers and BGP-LS (with a little bit of databases and javascript...)
 
-![Container Setup Diagram](/img/2020-07-31-building-a-mpls-and-sr-te-controllere/container-layout.JPG)
+![Container Setup Diagram](/img/2020-07-31-building-a-mpls-and-sr-te-controller/container-layout.JPG)
 
 Above you can see a very basic example of the intial layout for the project. Let's talk about each component:
 
@@ -30,7 +30,7 @@ database - Currently I am just running a simple sqlite database on the same cont
 
 ### TED / MPLS Topology
 
-![Basic TED Diagram](/img/2020-07-31-building-a-mpls-and-sr-te-controllere/basic-gui-network-map.JPG)
+![Basic TED Diagram](/img/2020-07-31-building-a-mpls-and-sr-te-controller/basic-gui-network-map.JPG)
 
 Above is a basic example of using the generated TED to build a awful looking topology that uses Vis.js. It currently shows links in both directions (and not the prefix/labels) but it will soon be looking half decent with the ability to interact with the GUI to perform basic TE functions.
 
@@ -42,10 +42,10 @@ A BGPLS-Prefix also includes information that relates to the specific BGPLS-Node
 
 Prior to this, I was generating the full TED based on the initial neighborship discovery, waited until the EOR for that specific neighbor was received and build a JSON TED which was just dumped into a database but doing it this way (via database relationships and SQLAlchemy) has allowed me to easily implement a JSON view of the network via the database model. Here is an snippet of the JSON output for the topology showed above:
 
-![Basic TED json](/img/2020-07-31-building-a-mpls-and-sr-te-controllere/ted-topology-json.JPG)
+![Basic TED json](/img/2020-07-31-building-a-mpls-and-sr-te-controller/ted-topology-json.JPG)
 
 While the GUI is very basic, it shows that I am able to build a small network and maintain the state in a database. If withdraws are detected for any NLRI type, the flask application will act eg. Delete the node if a node withdraw comes in... You can even see here a basic example of the Label mappings for every link along with the SID announced for the routers /32 loopback address:
-![TED Label Diagram](/img/2020-07-31-building-a-mpls-and-sr-te-controllere/labels_gui.JPG)
+![TED Label Diagram](/img/2020-07-31-building-a-mpls-and-sr-te-controller/labels_gui.JPG)
 
 ### What does all this information look like?
 
