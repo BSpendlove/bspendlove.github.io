@@ -213,11 +213,11 @@ What happens if we try to import this into Grafana?
 
 Well... It works! You can see within the templates I have cleaned up (dashboard.json and interface_panel.json), I have removed all empty lists/arrays and any null values and it imported very nicely. Let's move this along and introduce the same concept to our simple flask API which our Netbox webhooks are currently being sent to. The overall task/final solution is:
 
-1) Query netbox device from the ID given to us via the POST data.
-2) Generate a base template based on the title/name of the device.
-3) Grab all the interfaces that belong to that specific device in question and generate all the interface templates.
-4) Amend the interface templates to the base template and introduce the grafana_api python module.
-5) Grab the "General" folder from Grafana and generate the dashboard with the data we have. Overwrite any dashboards if they already exist because we want to update the Grafana dashboard when someone changes something on Netbox.
+1. Query netbox device from the ID given to us via the POST data.
+2. Generate a base template based on the title/name of the device.
+3. Grab all the interfaces that belong to that specific device in question and generate all the interface templates.
+4. Amend the interface templates to the base template and introduce the grafana_api python module.
+5. Grab the "General" folder from Grafana and generate the dashboard with the data we have. Overwrite any dashboards if they already exist because we want to update the Grafana dashboard when someone changes something on Netbox.
 
 You can generate an API key for Grafana by logging in as an administrator and finding the "API Keys" tab under the Configuration icon. Ensure that the correct permissions are selected depending on what you want to do with Grafana (Editor permission is fine for this example).
 
