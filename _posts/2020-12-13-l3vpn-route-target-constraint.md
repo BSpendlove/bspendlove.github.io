@@ -16,11 +16,13 @@ Addressing scheme for this lab:
 #### P2Ps
 
 IPv4: 10.0.X.Y/24 - Where X = routers on the link, Y = router number (eg. C-3 to C-4 = 10.0.34.3/24)
+
 IPv6: fc00:XXXX::Y/64 - Where X = routers on the link, Y = router number (eg. C-5 to PE-7 = fc00:57::5/64)
 
 #### Loopbacks
 
 10.255.255.X/32 - Where X = router number (eg. PE-10 = 10.255.255.10/32)
+
 fc00:FFFF::X/128 - Where X = router number (eg. RR-2 = fc00:FFFF::2/128)
 
 #### PE to CPE (VRF)
@@ -30,6 +32,7 @@ Typically /30s advertised into relevant customers VRF
 #### Route Targets and Route Distinguisher
 
 CUS-A (CPE1-1 and CPE1-2) = X.X.X.X:101 - Where X.X.X.X = PE loopback (eg. PE-7 CUS-A VRF = 10.255.255.7:101)
+
 CUS-B (CPE2-1 and CPE2-2) = X.X.X.X:102 - Where X.X.X.X = PE loopback (eg. PE-10 CUS-B VRF = 10.255.255.10:102)
 
 
