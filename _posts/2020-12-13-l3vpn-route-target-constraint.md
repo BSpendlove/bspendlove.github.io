@@ -7,7 +7,7 @@ comments: true
 
 I'll be trying a new approach instead of writing a full detailed blog, each subject that I am going through will be recorded here on my blog without going into too much detail but I will provide screenshots of pcaps/highlight the important areas of the packet that I am talking about. In this blog, we discuss L3VPN scalability at the access sites in terms of thousands of VPN customers.
 
-Here is the topology for the majority of labs in the L3VPN subsection of my quick tips:
+Here is the topology for the majority of labs in the L3VPN subsection of my quick tips. The only differences across my blogs may be the AS number, VRF naming convention/RT/RDs or route policy names.
 
 ![Base Topology](/img/2020-12-13-l3vpn-route-target-constraint/topology.JPG)
 
