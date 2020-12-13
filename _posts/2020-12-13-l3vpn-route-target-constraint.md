@@ -9,7 +9,7 @@ I'll be trying a new approach instead of writing a full detailed blog, each subj
 
 Here is the topology for the majority of labs in the L3VPN subsection of my quick tips:
 
-![Base Topology](/img/2020-12-13-l3vpn-route-target-constrain/topology.JPG)
+![Base Topology](/img/2020-12-13-l3vpn-route-target-constraint/topology.JPG)
 
 Addressing scheme for this lab:
 
@@ -98,7 +98,7 @@ router bgp 65501
 
 PE-8 now sends this in an UPDATE to it's route reflectors (RR-1 and RR-2) as expected:
 
-![PE-8 CUS-C Advertised](/img/2020-12-13-l3vpn-route-target-constrain/cus-c-sent-to-rr.JPG)
+![PE-8 CUS-C Advertised](/img/2020-12-13-l3vpn-route-target-constraint/cus-c-sent-to-rr.JPG)
 
 The RR's will now reflect this the clients and PE-9 receives this update (along with all the other PE routers) however, customer "CUS-C" (aka 10.255.255.8:103) is not being imported, therefore the BGP UPDATE is silently discarded as shown here in the BGP vpnv4 debug output:
 
@@ -135,13 +135,13 @@ vrf CUS-D
 
 When we configure an import policy or import a route-target on a VRF, we send a BGP ROUTE-REFRESH which specifically tells our route reflectors that we would like to refresh our BGP table for the SAFI: VPNv4 (128) as shown here:
 
-![PE-8 Route Refresh RR1](/img/2020-12-13-l3vpn-route-target-constrain/pe-8-route-refresh-rr1.JPG)
+![PE-8 Route Refresh RR1](/img/2020-12-13-l3vpn-route-target-constraint/pe-8-route-refresh-rr1.JPG)
 
-![PE-8 Route Refresh RR2](/img/2020-12-13-l3vpn-route-target-constrain/pe-8-route-refresh-rr2.JPG)
+![PE-8 Route Refresh RR2](/img/2020-12-13-l3vpn-route-target-constraint/pe-8-route-refresh-rr2.JPG)
 
 RR-1 and RR-2 will send a complete refresh of the VPNv4 routes (all customers, 101, 102, 103 and 104), this is expected and makes sense since we have these 4 VRFs configured on PE-8. What if we introduce one last customer (CUS-E CPE5-1 105) on PE-7? Remeber that PE-7 does not have CUS-C or CUS-D VRFs, nor will it have any VPNv4 routes for these customers because we also don't have any import policies configured for 10.255.255.8:103 or 10.255.255.8:104.
 
-![PE-7 CPE5-1](/img/2020-12-13-l3vpn-route-target-constrain/cpe5-1-new-customer.JPG)
+![PE-7 CPE5-1](/img/2020-12-13-l3vpn-route-target-constraint/cpe5-1-new-customer.JPG)
 
 ```
 vrf CUS-E
@@ -154,7 +154,7 @@ vrf CUS-E
 
 As shown in the previous packet capture, PE-7 will now send a ROUTE-REFRESH message to both RR-1 and RR-2. Here you can see RR-1 sending multiple BGP UPDATEs as a result of the route refresh request.
 
-![PE-7 RR-1 Route Refresh](/img/2020-12-13-l3vpn-route-target-constrain/pe-7-cus-d-route-refresh.JPG)
+![PE-7 RR-1 Route Refresh](/img/2020-12-13-l3vpn-route-target-constraint/pe-7-cus-d-route-refresh.JPG)
 
 I've highlighted in red to show the obvious fields:
 
@@ -188,7 +188,7 @@ router bgp 65501
 
 RR-1 and RR-2 send a BGP UPDATE with AFI (1 = IPv4) and SAFI (132 - Route Target Filter) path attributes which includes a default/wildcard prefix (0.0.0.0/0).
 
-![PE-7 RR-1 Route Refresh](/img/2020-12-13-l3vpn-route-target-constrain/rr-1-rtc-wildcard-pe7.JPG)
+![PE-7 RR-1 Route Refresh](/img/2020-12-13-l3vpn-route-target-constraint/rr-1-rtc-wildcard-pe7.JPG)
 
 The wildcard encoded in the NLRI is just to trigger PE-7 to request which RTs they are interested in receiving routes from. This is determined by the import policies configured under the VRFs along with the BGP VRF RD config which in our case are:
 
@@ -225,7 +225,7 @@ rotuer bgp 65501
   address-family ipv4 unicast
 ```
 
-![PE-7 Route Target Filter NLRI](/img/2020-12-13-l3vpn-route-target-constrain/pe-7-route-target-filter-nlri.JPG)
+![PE-7 Route Target Filter NLRI](/img/2020-12-13-l3vpn-route-target-constraint/pe-7-route-target-filter-nlri.JPG)
 
 This will now specifically tell RR-1 (and this same message is sent to RR-2) to only send routes that belong to these customers, since these are the only VRFs PE-7 has configured and doesn't care about CUS-C and CUS-D. (in real scenario, this could be the other 997 VPN customers and prevents us being sent 1-2 million VPNv4 routes). There is some additional configuration on the PE side if you are using Juniper, however this works with no additional configuration on IOS-XR due to how BGP will set the next-hop for the BGP NLRI as itself and your RRs may not be running MPLS (which I am running in this lab but it's irrelevant to the whole concept of Route Target Constraint).
 
