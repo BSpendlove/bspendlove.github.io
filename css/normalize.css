@@ -220,9 +220,6 @@ hr {
 
 pre {
   overflow: auto; /* I added this */
-  padding: 15px;
-  margin-bottom: 0;
-  font-size: 14px;
 }
 
 /**
