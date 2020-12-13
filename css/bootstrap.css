@@ -100,7 +100,10 @@ hr {
           box-sizing: content-box;
 }
 pre {
-  overflow: auto;
+  overflow: auto; /* I added this */
+  padding: 15px;
+  margin-bottom: 0;
+  font-size: 14px;
 }
 code,
 kbd,
@@ -1543,8 +1546,13 @@ pre {
   font-size: 13px;
   line-height: 1.42857143;
   color: #333;
-  word-break: break-all;
-  word-wrap: break-word;
+  overflow: auto; /* I added this */
+  padding: 15px;
+  margin-bottom: 0;
+  font-size: 14px;
+ /* white-space: pre-wrap; I deleted this
+  word-wrap: break-word;  and this
+  word-break: break-all; and also this */ 
   background-color: #f5f5f5;
   border: 1px solid #ccc;
   border-radius: 4px;
