@@ -7,7 +7,7 @@ comments: true
 
 ### SPCOR (350-501) objective 3.1.d Unified MPLS
 
-Unified MPLS helps scale large scale MPLS deployments by tweaking a few knobs and specifically configuring parts of the network in a certain way which is considered more 'scalable' compared to running a single IGP domain, everyone sharing MPLS labels whether it be LDP/RSVP/Segment Routing. Let's first look at an issue introduced when we start breaking out the network into multiple smaller IGP domains. Take a look at this topology:
+Unified MPLS helps with large scale MPLS deployments by tweaking a few knobs and specifically configuring parts of the network in a certain way which is considered more 'scalable' compared to running a single IGP domain, everyone sharing MPLS labels whether it be LDP/RSVP/Segment Routing. Let's first look at an issue introduced when we start breaking out the network into multiple smaller IGP domains. Take a look at this topology:
 
 ![Base Topology](/img/2020-12-28-unified-mpls-study-session/base-topology.JPG)
 
