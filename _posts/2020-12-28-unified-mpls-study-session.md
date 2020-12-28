@@ -204,8 +204,6 @@ I've ran into a few issues with XRv and MPLS labels not being installed properly
 
 The underlying service label will not change end to end. Other labels are specifically used to identify how to reach the remote PE/other IGP domain. For troubleshooting purposes, you can typically send the segment routing SID in the BGP-LU update if you're using SR so that new labels are not generated.
 
-![PE1 to PE3 LSP](/img/2020-12-28-unified-mpls-study-session/mpls-lsp-pe1-pe3.JPG)
-
 Let's demonstrate this with a service label (eg. CPE1-1 and CPE1-2 in a VRF).
 
 PE1 VRF CEF Recursion
