@@ -291,6 +291,6 @@ Diagrams may include more labels than presented in the traceroute/show command o
 
 Thank you for taking the time to read this short post and please feel free to leave a comment if you have found this post interesting or useful. Some very useful resources that I've found helpful during my studies are: 
 
-1) ![Configure Unified MPLS in Cisco IOS XR](https://www.cisco.com/c/en/us/support/docs/multiprotocol-label-switching-mpls/multiprotocol-label-switching-mpls/119191-config-unified-mpls-00.html)
-2) ![MPLS in the SDN Era](https://www.oreilly.com/library/view/mpls-in-the/9781491905449/)
-3) ![Unified MPLS Functionality, Features, and Configuration Example](https://www.cisco.com/c/en/us/support/docs/multiprotocol-label-switching-mpls/mpls/118846-config-mpls-00.html)
+1) [Configure Unified MPLS in Cisco IOS XR](https://www.cisco.com/c/en/us/support/docs/multiprotocol-label-switching-mpls/multiprotocol-label-switching-mpls/119191-config-unified-mpls-00.html)
+2) [MPLS in the SDN Era](https://www.oreilly.com/library/view/mpls-in-the/9781491905449/)
+3) [Unified MPLS Functionality, Features, and Configuration Example](https://www.cisco.com/c/en/us/support/docs/multiprotocol-label-switching-mpls/mpls/118846-config-mpls-00.html)
