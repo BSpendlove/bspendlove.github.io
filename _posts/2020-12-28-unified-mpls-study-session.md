@@ -296,3 +296,16 @@ Thank you for taking the time to read this short post and please feel free to le
 2) [MPLS in the SDN Era](https://www.oreilly.com/library/view/mpls-in-the/9781491905449/)
 
 3) [Unified MPLS Functionality, Features, and Configuration Example](https://www.cisco.com/c/en/us/support/docs/multiprotocol-label-switching-mpls/mpls/118846-config-mpls-00.html)
+
+
+### Further notes
+
+I have got Segment Routing Unified MPLS working with some additional correction in previous configuration. There also seem to be 2 methods of achieving the same results via either redistribution of the agg/access IGP domains into BGP only at the ABR (not advertised into the BGP routing process from PE1/PE3) which successfully copies over the correct label in the BGP label-index, or manually setting it when advertising the loopback address in the BGP process on the local router itself. I have opted for the 2nd option since it seems much cleaner and the configuration is more managable based on where the route actually originates (PE loopback) instead of redistributing the IS-IS route into BGP.
+
+You can find a full configuration here:
+
+[Topology, Configuration and Output captures](/lab-configs/2020-12-28-unified-mpls-study-session)
+
+Topology used in the above SR example:
+
+![SR Unified MPLS Topology](/lab-configs/2020-12-28-unified-mpls-study-session/segment-routing-unified-mpls-topology.JPG)

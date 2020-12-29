@@ -1,0 +1,86 @@
+RP/0/0/CPU0:PE1#show mpls forwarding
+Tue Dec 29 04:30:19.667 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24000  Pop         SR Adj (idx 0)     Gi0/0/0/0    10.0.12.2       0           
+24001  Pop         SR Adj (idx 2)     Gi0/0/0/0    10.0.12.2       0           
+24004  Aggregate   CUS-A: Per-VRF Aggr[V]   \
+                                      CUS-A                        1040        
+72002  Pop         SR Pfx (idx 2)     Gi0/0/0/0    10.0.12.2       0           
+72003  72003       SR Pfx (idx 3)     Gi0/0/0/0    10.0.12.2       20861       
+72005  72005       SR Pfx (idx 5)                  10.255.255.3    0           
+72008  72008       SR Pfx (idx 8)     Gi0/0/0/0    10.0.12.2       648    
+
+
+RP/0/0/CPU0:P2#show mpls forwarding
+Tue Dec 29 04:30:18.595 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24000  Pop         SR Adj (idx 0)     Gi0/0/0/1    10.0.12.1       0           
+24001  Pop         SR Adj (idx 2)     Gi0/0/0/1    10.0.12.1       0           
+24002  Pop         SR Adj (idx 0)     Gi0/0/0/0    10.0.23.3       0           
+24003  Pop         SR Adj (idx 2)     Gi0/0/0/0    10.0.23.3       0           
+72001  Pop         SR Pfx (idx 1)     Gi0/0/0/1    10.0.12.1       21745       
+72003  Pop         SR Pfx (idx 3)     Gi0/0/0/0    10.0.23.3       20877       
+72008  72008       SR Pfx (idx 8)     Gi0/0/0/0    10.0.23.3       1080 
+
+
+RP/0/0/CPU0:ABR3#show mpls forwarding
+Tue Dec 29 04:30:19.844 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24000  Pop         SR Adj (idx 0)     Gi0/0/0/0    10.0.23.2       0           
+24001  Pop         SR Adj (idx 2)     Gi0/0/0/0    10.0.23.2       0           
+24002  Pop         SR Adj (idx 1)     Gi0/0/0/1    10.0.38.8       0           
+24003  Pop         SR Adj (idx 3)     Gi0/0/0/1    10.0.38.8       0           
+72001  72001       SR Pfx (idx 1)     Gi0/0/0/0    10.0.23.2       23089       
+72002  Pop         SR Pfx (idx 2)     Gi0/0/0/0    10.0.23.2       0           
+72005  72005       SR Pfx (idx 5)                  10.255.255.8    3979        
+72008  Pop         SR Pfx (idx 8)     Gi0/0/0/1    10.0.38.8       23078   
+
+
+RP/0/0/CPU0:ABR8#show mpls forwarding
+Tue Dec 29 04:30:19.454 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24000  Pop         SR Adj (idx 1)     Gi0/0/0/0    10.0.38.3       0           
+24001  Pop         SR Adj (idx 3)     Gi0/0/0/0    10.0.38.3       0           
+24002  Pop         SR Adj (idx 0)     Gi0/0/0/1    10.0.48.4       0           
+24003  Pop         SR Adj (idx 2)     Gi0/0/0/1    10.0.48.4       0           
+72001  72001       SR Pfx (idx 1)                  10.255.255.3    2957        
+72003  Pop         SR Pfx (idx 3)     Gi0/0/0/0    10.0.38.3       19803       
+72004  Pop         SR Pfx (idx 4)     Gi0/0/0/1    10.0.48.4       0           
+72005  72005       SR Pfx (idx 5)     Gi0/0/0/1    10.0.48.4       1209222  
+
+
+RP/0/0/CPU0:P4#show mpls forwarding
+Tue Dec 29 04:30:18.304 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24000  Pop         SR Adj (idx 0)     Gi0/0/0/1    10.0.45.5       0           
+24001  Pop         SR Adj (idx 2)     Gi0/0/0/1    10.0.45.5       0           
+24002  Pop         SR Adj (idx 0)     Gi0/0/0/0    10.0.48.8       0           
+24003  Pop         SR Adj (idx 2)     Gi0/0/0/0    10.0.48.8       0           
+72003  72003       SR Pfx (idx 3)     Gi0/0/0/0    10.0.48.8       0           
+72005  Pop         SR Pfx (idx 5)     Gi0/0/0/1    10.0.45.5       2321000     
+72008  Pop         SR Pfx (idx 8)     Gi0/0/0/0    10.0.48.8       18584    
+
+
+RP/0/0/CPU0:PE5#show mpls forwarding
+Tue Dec 29 04:30:16.767 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24000  Pop         SR Adj (idx 0)     Gi0/0/0/0    10.0.45.4       0           
+24001  Pop         SR Adj (idx 2)     Gi0/0/0/0    10.0.45.4       0           
+24005  Aggregate   CUS-A: Per-VRF Aggr[V]   \
+                                      CUS-A                        1040        
+72001  72001       SR Pfx (idx 1)                  10.255.255.8    0           
+72003  72003       SR Pfx (idx 3)     Gi0/0/0/0    10.0.45.4       0           
+72004  Pop         SR Pfx (idx 4)     Gi0/0/0/0    10.0.45.4       0           
+72008  72008       SR Pfx (idx 8)     Gi0/0/0/0    10.0.45.4       19508  

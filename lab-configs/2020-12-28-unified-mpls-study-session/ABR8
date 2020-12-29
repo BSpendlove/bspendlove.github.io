@@ -1,0 +1,92 @@
+hostname ABR8
+interface Loopback0
+ ipv4 address 10.255.255.8 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.0.38.8 255.255.255.0
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 10.0.48.8 255.255.255.0
+!
+interface GigabitEthernet0/0/0/2
+ shutdown
+!
+prefix-set CORE-LOOPBACKS
+  10.255.255.0/24 ge 32
+end-set
+!
+route-policy SID($SID)
+  set label-index $SID
+end-policy
+!
+route-policy DROP-ALL
+  drop
+end-policy
+!
+route-policy PROPAGATE-ISIS-CORE-LOOPBACKS
+  if destination in CORE-LOOPBACKS then
+    pass
+  endif
+end-policy
+!
+router isis 1
+ net 49.0001.0000.0000.0008.00
+ segment-routing global-block 72000 89999
+ address-family ipv4 unicast
+  metric-style wide
+  metric 1000
+  mpls traffic-eng level-1-2
+  mpls traffic-eng router-id Loopback0
+  propagate level 1 into level 2 route-policy DROP-ALL
+  propagate level 2 into level 1 route-policy PROPAGATE-ISIS-CORE-LOOPBACKS
+  segment-routing mpls
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+   prefix-sid index 8
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/1
+  point-to-point
+  address-family ipv4 unicast
+  !
+ !
+!
+router bgp 65000
+ ibgp policy out enforce-modifications
+ address-family ipv4 unicast
+  network 10.255.255.8/32 route-policy SID(8)
+  allocate-label all
+ !
+ neighbor 10.255.255.3
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 labeled-unicast
+   next-hop-self
+  !
+ !
+ neighbor 10.255.255.5
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 labeled-unicast
+   route-reflector-client
+   next-hop-self
+  !
+ !
+!
+mpls traffic-eng
+!
+segment-routing
+ global-block 72000 89999
+!
+end
