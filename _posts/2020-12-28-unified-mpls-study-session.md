@@ -304,7 +304,7 @@ I have got Segment Routing Unified MPLS working with some additional correction 
 
 You can find a full configuration here:
 
-[Topology, Configuration and Output captures](/lab-configs/2020-12-28-unified-mpls-study-session)
+[Topology, Configuration and Output captures](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2020-12-28-unified-mpls-study-session)
 
 Topology used in the above SR example:
 
