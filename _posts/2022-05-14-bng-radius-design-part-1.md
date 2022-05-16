@@ -10,12 +10,19 @@ NOTE: This will be a multi-part post because there is too much to cover in 1 sit
 I am still quite very new to BNGs and have had to chance to lead a massive part of a design that required a brand new concept introduced into the network which is running BNGs. Essentially you terminate subscribers on a BNG to handle simple things like user authorization, policing/qos, central accounting and can handle other things but let me tell you the requirements I've had to deal with that I will hope to speak about in this blog post(s):
 
 1) Carry QinQ (double tagged frames) back to a BNG
+
 2) Authorize customers based on IPoE (DHCP triggered) sessions
+
 3) Provide policing (speed packages) and basic activating/deactivating services
+
 4) Dynamic vs Static IP address assignment
+
 5) Static IPv6 PD assignment
+
 6) Centralized accounting purely for building additional tools to perform further actions (eg. troubleshooting tools)
+
 7) RADIUS must be redundant, however all subscribers must be allowed to get to the internet if the AAA functions fail (eg. RADIUS is unreachable)
+
 8) Account for distributed vs centralized BNG design with all the above requirements
 
 The actual reason for the implementation of BNGs was to deal with QinQ in a "easy" and "simple" way from the network perspective, the more simple the network, the easier it is to troubleshoot at 3am on a Sunday...
