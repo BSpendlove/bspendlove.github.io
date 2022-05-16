@@ -7,7 +7,7 @@ comments: true
 
 NOTE: This will be a multi-part post because there is too much to cover in 1 sitting...
 
-I am still quite very new to BNGs and have had to chance to lead a massive part of a design that required a brand new concept introduced into the network which is running BNGs. Essentially you terminate subscribers on a BNG to handle simple things like user authorization, policing/qos, central accounting and can handle other things but let me tell you the requirements I've had to deal with that I will hope to speak about in this blog post(s):
+I am still quite very new to BNGs and have had the chance to lead a massive part of a design that required a brand new concept introduced into the network which is running BNGs. Essentially you terminate subscribers on a BNG to handle simple things like user authorization, policing/qos, central accounting and can handle other things but let me tell you the requirements I've had to deal with that I will hope to speak about in this blog post(s):
 
 - 1) Carry QinQ (double tagged frames) back to a BNG
 - 2) Authorize customers based on IPoE (DHCP triggered) sessions
@@ -76,11 +76,11 @@ If we can't specifically create a range on the BNG, it would require multiple su
 
 ### Hardware/Software decisions
 
-I'm sure many of the readers would agree but you typically don't want to purchase hardware just because it has a certain name on the box. At the end of the day, we would all love a free BNG that does Terabits of throughput with 2 million sessions but that isn't going to happen so we need to find the best BNG boxes (or software) for our requirements and at the best possible price. Therefore these are the things I've noticed that need to been considered when chosing the right hardware/software:
+I'm sure many of the readers would agree but you typically don't want to purchase hardware just because it has a certain name on the box. At the end of the day, we would all love a free BNG that does Terabits of throughput with 2 million sessions but that isn't going to happen so we need to find the best BNG boxes (or software) for our requirements and at the best possible price. Therefore these are the things I've noticed that need to be considered when chosing the right hardware/software:
 
 1) Throughput - You can think of this on a port basis, eg. 10Gs, 40Gs, 100Gs however you need to consider the platform architecture itself and how the limitations may affect you, for example you need to pay close attention to the various NPUs/chips and support if BNG fuctions will work on the specific linecards
 
-2) Sessions - You need to ensure you get the correct # of supported sessions however you also need to consider the limitations of the platform similar to point #1. Running a bundle interface for example with 2 interfaces that are effectively connected to separate NPUs in the backplane will duplicate your subscriber count and not double your total amount of sessions you can run. The platform may support 128/256k sessions however a physical port may only be limited to 32/64k. Also find out from the vendors you are speaking with, does running QoS on the interface where your subscribers are arriving half the total amount of sessions? Is the BNG implementation counting IPv6 as separate sessions or will count as a single session (Dual-Stack)?
+2) Sessions - You need to ensure you get the correct # of supported sessions however you also need to consider the limitations of the platform similar to point #1. For example on the Cisco ASR9K, running 2 interfaces within a bundle that are effectively connected to separate NPUs in the backplane will duplicate your subscriber count and not double your total amount of sessions you can run (each subscriber will be created on both NPUs). The platform may support 128/256k sessions however a physical port may only be limited to 32/64k. Also find out from the vendors you are speaking with, does running QoS on the interface where your subscribers are arriving half the total amount of sessions? Is the BNG implementation counting IPv6 as separate sessions or will count as a single session (Dual-Stack)?
 
 3) Cost - An obvious point that I shouldn't make however the above 2 points should make you question, why is this box more expensive than the other box yet does 32k less sessions with the same throughput? I personally haven't looked too much into the various virtualized BNG platforms that you can run on a server but it doesn't hurt to check out the virtualized options, although virtualized software doesn't always = cheap.
 
@@ -100,4 +100,4 @@ Here are some posts that are great reading material on BNGs
 
 My next blog post will continue by talking about the radius infrastructure that sits behind the BNG to authenticate, authorize and performing accounting. The main reason is that I want to setup a quick lab and provide configurations and better diagrams with working examples so please tune in for the next post about my experience and thoughts being very new to BNGs :-)
 
-We will discuss how users are authenticated via RADIUS and then returned attributes that make up a service (eg. a speed package for broadband customers), a few problem scenarios with dynamic and static IP assignment for CPEs, creating/the design of a redundant database backend and how dumb CPEs can be when you run IPv6.
+We will discuss how users are authenticated via RADIUS and then returned attributes that make up a service (eg. a speed package for broadband customers), a few problem scenarios with dynamic and static IP assignment for CPEs, creating/the design of a redundant database backend and how dumb CPEs can be when you run IPv6. A third post will probably be created with a fully functional lab (XRv9K + few clients and radius database)
