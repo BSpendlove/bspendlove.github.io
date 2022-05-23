@@ -41,61 +41,61 @@ After running through the installation, we can now proceed with creating our `ra
 
 1. Create the `radius` databaase
 
-```
-CREATE DATABASE radius;
-```
+    ```
+    CREATE DATABASE radius;
+    ```
 
 2. Create a database user which we will use during this demo, you should ensure database permissions are set correctly for a production environment!
 
-```
-CREATE USER 'radius'@'localhost' IDENTIFIED by 'changemeP!z';
-GRANT ALL PRIVILEGES ON radius.* TO 'radius'@'localhost';
-FLUSH PRIVILEGES;
-```
+    ```
+    CREATE USER 'radius'@'localhost' IDENTIFIED by 'changemeP!z';
+    GRANT ALL PRIVILEGES ON radius.* TO 'radius'@'localhost';
+    FLUSH PRIVILEGES;
+    ```
 
 You will also need to add the user again with access from the IP(s) of the FreeRADIUS servers where the docker container will run on. However because we are running the API in a container, we will just allow % for the purpose of this demo.
 
-```
-CREATE USER 'radius'@'%' IDENTIFIED by 'changemeP!z';
-GRANT ALL PRIVILEGES ON radius.* TO 'radius'@'%';
-FLUSH PRIVILEGES;
-```
+    ```
+    CREATE USER 'radius'@'%' IDENTIFIED by 'changemeP!z';
+    GRANT ALL PRIVILEGES ON radius.* TO 'radius'@'%';
+    FLUSH PRIVILEGES;
+    ```
 
 Ensure the bind-address in `/etc/mysql/mariadb.conf.d/50-server.cnf` also is set to allow remote connections.
-```
-# Instead of skip-networking the default is now to listen only on
-# localhost which is more compatible and is not less secure.
-bind-address            = 0.0.0.0
-```
+    ```
+    # Instead of skip-networking the default is now to listen only on
+    # localhost which is more compatible and is not less secure.
+    bind-address            = 0.0.0.0
+    ```
 
 3. Import the schema into the database 
 
-```
-sudo su
-mysql -u root -p radius < /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
-```
+    ```
+    sudo su
+    mysql -u root -p radius < /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
+    ```
 
 4. Ensure you can log in using the username/password created in step 2. Ensure that the following tables are created which means the schema.sql was successfully imported
 
-```
-mysql -u radius -p
+    ```
+    mysql -u radius -p
 
-MariaDB [(none)]> USE radius;
-MariaDB [radius]> SHOW TABLES;
-+------------------+
-| Tables_in_radius |
-+------------------+
-| nas              |
-| radacct          |
-| radcheck         |
-| radgroupcheck    |
-| radgroupreply    |
-| radpostauth      |
-| radreply         |
-| radusergroup     |
-+------------------+
-8 rows in set (0.000 sec)
-```
+    MariaDB [(none)]> USE radius;
+    MariaDB [radius]> SHOW TABLES;
+    +------------------+
+    | Tables_in_radius |
+    +------------------+
+    | nas              |
+    | radacct          |
+    | radcheck         |
+    | radgroupcheck    |
+    | radgroupreply    |
+    | radpostauth      |
+    | radreply         |
+    | radusergroup     |
+    +------------------+
+    8 rows in set (0.000 sec)
+    ```
 
 ## Configuring FreeRADIUS to use the database
 
@@ -158,40 +158,40 @@ If you want freeradius to throw an error if the database is unreachable, you can
 
 1. Clone the project
 
-```
-git clone https://github.com/BSpendlove/freeradius-api.git
-```
+    ```
+    git clone https://github.com/BSpendlove/freeradius-api.git
+    ```
 
 2. Copy the .env-example to .env, and fill out some variables
 
-```
-cp .env-example .env
-vim .env
+    ```
+    cp .env-example .env
+    vim .env
 
-API_TOKEN_KEY=x-api-token
-API_TOKEN=change-me-please
-SQLALCHEMY_DATABASE_URL="mysql+pymysql://radius:changemeP!z@10.4.20.89:3006/radius?charset=utf8mb4"
-MONGODB_URI=mongodb://freeradius:changemeP!z@mongo:27017/
-```
+    API_TOKEN_KEY=x-api-token
+    API_TOKEN=change-me-please
+    SQLALCHEMY_DATABASE_URL="mysql+pymysql://radius:changemeP!z@10.4.20.89:3006/radius?charset=utf8mb4"
+    MONGODB_URI=mongodb://freeradius:changemeP!z@mongo:27017/
+    ```
 
 3. (Optional) Mount the FreeRADIUS shared dictionaries in the docker-compose.yml file if you want to test out the `validate_avpairs` option, this enables attribute lookup when you try to add it into the radcheck/radreply/radgroupcheck and radgroupreply database tables. If it isn't in your FreeRADIUS shared dictionaries then it will return a 404 error and not insert the attribute into the database. By default this is disabled and you can skip this optional step if you'd like...
 
-```
-version: '3.1'
+    ```
+    version: '3.1'
 
-services:
-  freeradius_bng_api:
-    build: .
-    volumes:
-      - /usr/share/freeradius/:/freeradius_dictionaries:ro # HERE
-```
+    services:
+    freeradius_bng_api:
+        build: .
+        volumes:
+        - /usr/share/freeradius/:/freeradius_dictionaries:ro # HERE
+    ```
 
 4. Run the docker-compose file (you can remove the MongoDB service if you skip step 3)
 
-```
-cd ~/freeradius-api
-docker-compose up --build
-```
+    ```
+    cd ~/freeradius-api
+    docker-compose up --build
+    ```
 
 Once this is finished, we should see the server start up:
 
