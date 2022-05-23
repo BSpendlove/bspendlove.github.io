@@ -53,7 +53,7 @@ After running through the installation, we can now proceed with creating our `ra
     FLUSH PRIVILEGES;
     ```
 
-You will also need to add the user again with access from the IP(s) of the FreeRADIUS servers where the docker container will run on. However because we are running the API in a container, we will just allow % for the purpose of this demo.
+ You will also need to add the user again with access from the IP(s) of the FreeRADIUS servers where the docker container will run on. However because we are running the API in a container, we will just allow % for the purpose of this demo.
 
     ```
     CREATE USER 'radius'@'%' IDENTIFIED by 'changemeP!z';
@@ -61,7 +61,7 @@ You will also need to add the user again with access from the IP(s) of the FreeR
     FLUSH PRIVILEGES;
     ```
 
-Ensure the bind-address in `/etc/mysql/mariadb.conf.d/50-server.cnf` also is set to allow remote connections.
+ Ensure the bind-address in `/etc/mysql/mariadb.conf.d/50-server.cnf` also is set to allow remote connections.
     ```
     # Instead of skip-networking the default is now to listen only on
     # localhost which is more compatible and is not less secure.
