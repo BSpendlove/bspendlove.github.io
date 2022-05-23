@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Deploying an FastAPI based application for FreeRADIUS
+title: Deploying a FastAPI based application for FreeRADIUS
 subtitle: HTTP endpoints make life easier
 comments: true
 ---
