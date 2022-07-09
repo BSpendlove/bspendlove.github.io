@@ -393,7 +393,7 @@ Color: 201, End-point: 10.255.255.8
   Policy Packets/Bytes Switched: 15/480
 ```
 
-In this case, our label stack should show 24006/2008(Transport)/24002(VPN). Below is a packet capture on xrv9k7 G0/0/0/0.
+In this case, our label stack should show 24006/20008(Transport)/24002(VPN). Below is a packet capture on xrv9k7 G0/0/0/0.
 
 ![ODN Label Stack](/img/2022-07-09-segment-routing-odn-l3vpn/odn_packet_capture.PNG)
 
