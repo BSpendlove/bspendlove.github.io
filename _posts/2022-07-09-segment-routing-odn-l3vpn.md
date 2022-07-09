@@ -5,7 +5,7 @@ subtitle: Segment Routing Traffic Engineering with BGP On Demand Nexthop
 comments: true
 ---
 
-Short blog post diving straight into the technical parts. The base topology here is just a flat level-2 IS-IS IGP with Segment Routing enabled, prefix-sid configured on all loopbacks (Node SID) and 10.0.xy.x/24 | 2001:db8:xy::x/64 configured on p2p where x = lowest router # on the segment, y = highest router # on the segment, loopbacks = 10.255.255.x/32 | 2001:db8::x/128 where x = router # in hostname.
+Short blog post diving straight into the technical parts. The base topology here is just a flat level-2 IS-IS IGP with Segment Routing enabled, prefix-sid configured on all loopbacks (Node SID) and 10.0.xy.x/24 & 2001:db8:xy::x/64 configured on p2p where x = lowest router # on the segment, y = highest router # on the segment, loopbacks = 10.255.255.x/32 & 2001:db8::x/128 where x = router # in hostname.
 
 ![Base SR Topology](/img/2022-07-09-segment-routing-odn-l3vpn/base_topology.PNG)
 
