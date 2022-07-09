@@ -158,7 +158,7 @@ vrf VRF-B
 !
 ```
 
-A lot of output is omitted like the BGP config, VRF config, you can find all the final configurations here: [Configurations](/lab-configs/2022-07-09-segment-routing-odn-l3vpn/)
+A lot of output is omitted like the BGP config, VRF config, you can find all the final configurations here: [Configurations](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-07-09-segment-routing-odn-l3vpn)
 
 ![BGP Update Color](/img/2022-07-09-segment-routing-odn-l3vpn/bgp_update_color.PNG)
 
