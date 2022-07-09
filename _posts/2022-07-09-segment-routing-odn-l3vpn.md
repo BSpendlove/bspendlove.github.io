@@ -413,3 +413,17 @@ xrv2 will pop the label and send out to G0/0/0/1, which by this point will then 
 Essentially what our SR-TE policy has done is utilized the topology to find the best path avoiding the RED service by using the local adjacency SID xrv2 has advertised to xrv9k7 to go directly to xrv4, which solves our scenario where we want to avoid g0/0/0/0 on xrv2 due to the Affinity. if we now replace L3VPN with L2VPN/EVPN, the configuration is almost the same with the exception of working with EVI/xconnect groups by assosicating the SR-TE policy with the EVI/xconnect pw-classes and we can achieve EVPN/L2VPN with SR-TE BGP ODN.
 
 While I haven't actually tested this in EVPN on IOS-XRv9K (you can fake the dataplane working with injecting local mac addresses), I can't see any reason why this wouldn't work on the control plane within a lab as long as you use the 9K and not the old 32bit IOS-XRv image which barely supports these technologies.
+
+Resources I used:
+
+https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/segment-routing/63x/b-segment-routing-cg-63x-ncs540/b-segment-routing-cg-63x-ncs540_chapter_0110.html#id_125526
+
+https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/lxvpn/configuration/guide/b-l2vpn-cg-asr9000-70x/b-l2vpn-cg-asr9000-70x_chapter_01101.html#concept_E054E3C768064F1F86B0430BAF6F722B
+
+http://www.mplsvpn.info/2020/05/segment-routing-on-demand-next-hop-for.html
+
+https://datatracker.ietf.org/doc/html/rfc5305#section-3.1
+
+https://datatracker.ietf.org/doc/html/rfc7308
+
+http://ops.openconfig.net/branches/models/master/docs/openconfig-network-instance-srte-policy.html
