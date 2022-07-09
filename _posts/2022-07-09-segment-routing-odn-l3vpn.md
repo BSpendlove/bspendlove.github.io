@@ -363,7 +363,7 @@ RP/0/RP0/CPU0:xrv9k7#show cef vrf VRF-B 10.0.0.2/32
 The BSID forwarding information is where the real deal is:
 
 ```
-RP/0/RP0/CPU0:xrv9k7#show segment-routing traffic-eng forwarding policy bindin$
+RP/0/RP0/CPU0:xrv9k7#show segment-routing traffic-eng forwarding policy binding-sid 24003
 Sat Jul  9 12:51:04.788 UTC
 
 SR-TE Policy Forwarding database
