@@ -1,7 +1,7 @@
 ---
 layout: post
-title: BNG Wholesale (Layer 2) - Part 1
-subtitle: Layer 2 Wholesale for multiple retail ISPs
+title: BNG Wholesale Lab - Part 1
+subtitle: Layer 2 and Layer 3 Wholesale for multiple retail ISPs
 comments: true
 ---
 
