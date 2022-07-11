@@ -88,6 +88,19 @@ aaa accounting subscriber SHARED_RADIUS group WHOLESALE_RADIUS
 aaa authorization subscriber SHARED_RADIUS group WHOLESALE_RADIUS
 aaa authentication subscriber SHARED_RADIUS group WHOLESALE_RADIUS
 
+! VRF and Loopbacks
+vrf ISP1
+!
+vrf ISP2
+!
+interface Loopback10
+ vrf ISP1
+ ipv4 address 10.10.0.1 255.255.0.0
+!
+interface Loopback20
+ vrf ISP2
+ ipv4 address 10.20.0.1 255.255.0.0
+
 ! Dynamic templates that are activated upon access-accept returned from RADIUS
 dynamic-template
  type ipsubscriber DT_IPOE_ISP1
@@ -150,15 +163,9 @@ policy-map type control subscriber PM_IPOE_ISP2
  end-policy-map
 ```
 
-This should get us started with our initial RADIUS access-request being sent to the radius server 10.4.20.89. We will build the FreeRADIUS configuration and simulate both retail ISPs being able to talk to an API we host as the wholesaler to add/remove customers from the database for their networks and then we will focus on DHCP/DHCP proxy and the Layer 3 NNI. Let's quickly build the Layer 3 NNI towards ISP#2 and then we will finish with ISP#1 when we install their DHCP server running on a docker container. ISP#2 will also send a default route for this VRF which will route traffic to their CGN.
+This should get us started with our initial RADIUS access-request being generated and the BNG will attempt to send this request to the radius server 10.4.20.89. We will build the FreeRADIUS configuration and simulate both retail ISPs being able to talk to an API we host as the wholesaler to add/remove customers from the database for their networks in part 2 however for now because this server is not setup, most of our policies will match the `authorization-no-response` event which activates the dynamic template due to RADIUS not being reachable. Let's quickly build the Layer 3 NNI towards ISP#2 and then we will finish with ISP#1 when we install their DHCP server running on a docker container in part 2. ISP#2 will also send a default route for this VRF which will route traffic to their CGN.
 
 ```
-vrf ISP2
-!
-interface Loopback20
- vrf ISP2
- ipv4 address 10.20.0.1 255.255.0.0
-!
 interface GigabitEthernet0/0/0/1
  vrf ISP2
  ipv4 address 192.0.2.0 255.255.255.254
