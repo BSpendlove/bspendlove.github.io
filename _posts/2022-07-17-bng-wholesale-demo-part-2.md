@@ -361,7 +361,6 @@ Access-Request and Access-Accept in FreeRADIUS debug output
 (1) # Executing section authorize from file /etc/freeradius/3.0/sites-enabled/default
 <omitted-output>
 (2) sql: SQL-User-Name set to '5000.0002.0000'
-(2) sql: EXPAND INSERT INTO radpostauth (username, pass, reply, authdate ) VALUES ( '%{SQL-User-Name}', '%{%{User-Password}:-%{Chap-Password}}', '%{reply:Packet-Type}', '%S.%M' )
 (2) sql:    --> INSERT INTO radpostauth (username, pass, reply, authdate ) VALUES ( '5000.0002.0000', 'default', 'Access-Accept', '2022-07-17 15:43:36.132710' )
 (2) sql: Executing query: INSERT INTO radpostauth (username, pass, reply, authdate ) VALUES ( '5000.0002.0000', 'default', 'Access-Accept', '2022-07-17 15:43:36.132710' )
 (2) sql: SQL query returned: success
