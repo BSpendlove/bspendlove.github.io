@@ -5,7 +5,7 @@ subtitle: Layer 2 and Layer 3 Wholesale for multiple retail ISPs
 comments: true
 ---
 
-This post is a multi-part post, the 1st part covers the 2 different models that are widely deployed, initial configuration for the BNG with dynamic templates/service policy maps and the 2nd part will cover the shared radius infrastructure and retail ISP#1 own DHCP server instead of using the wholesale BNG to handle the DHCP requests. The 2nd part will cover the database setup and authorizing a customer onto the network to reach the relevant retail ISP services based on the shared database.
+This post is a multi-part post, the 1st part covers the 2 different models that are widely deployed, initial configuration for the BNG with dynamic templates/service policy maps. The 2nd part will cover the database setup and authorizing a customer onto the network to reach the relevant retail ISP services based on the shared database.
 
 We will first begin with the basic setup and configuration of the most recent FreeRADIUS package running on Ubuntu 22.04. Test authorization for a single user and then start looking a very basic wholesale API to let the retail ISPs add their own customer data into the shared database.
 
@@ -76,7 +76,7 @@ Run through the initial configuration and create a password for the root user an
 systemctl enable mariadb
 ```
 
-If your radius server is not on the same host as the database, you will need to configure the user in the database to change the `bind-address` in `/etc/mysql/mariadb.conf.d/50-server.cnf` to allow MariaDB to listen on an IP address and also create the user with access from the source IP instead of localhost. We don't need to change any settings related to the mariadb server in this lab configuration so lets move onto creating the database + user and then importing the radius schema into our database.
+If your radius server is not on the same host as the database, you will need to change the `bind-address` in `/etc/mysql/mariadb.conf.d/50-server.cnf` to allow MariaDB to listen on an IP address and also create the user with access from the source IP instead of localhost within the database itself. We don't need to change any settings related to the mariadb server at this point in this lab configuration so lets move onto creating the database + user and then importing the radius schema into our database.
 
 ```
 mariadb -u root -p
