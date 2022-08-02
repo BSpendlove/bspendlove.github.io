@@ -34,7 +34,7 @@ Each vendor device_driver will inherit the generic device driver, but implement 
 
 Our Netconf generic driver will be called `GenericNetconfDriver` and any vendor specific driver can either follow the pattern of the OS name + version or simply the OS name (eg. cisco.py will contain `IOSXENetconfDriver` and `IOSXRNetconfDriver`). Let's start with our generic netconf driver.
 
-[device_drivers\netconf\generic.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/generic_netconf_driver_1.py)
+[device_drivers\netconf\generic.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/generic_netconf_driver_1.py)
 ```
 from ncclient import manager
 
@@ -78,7 +78,7 @@ Some optional arguments can be avoided if you want to only use SSH key based aut
 
 `self.session = None` will hold the ncclient `manager.connect()` method which will then allow us to interact with the various netconf operations like .get(), .get_config() and .edit_config(). Let's implement a connect method in our generic netconf class to handle the authentication and connection to the device, the reason why I am doing this is incase we ever want to change generic connect method for all vendors, I can simply change it from this base generic class and all the other vendors will inherit this behaviour.
 
-[device_drivers\netconf\generic.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/generic_netconf_driver_2.py)
+[device_drivers\netconf\generic.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/generic_netconf_driver_2.py)
 ```
 def connect(self, **kwargs) -> None:
     if self.session:
@@ -128,7 +128,7 @@ print(config)
 
 Let's confirm an XML filter works for our device, currently we are testing against Cisco IOS-XR which presents the `interfaces` configuration in the root tree of the XML, let's quickly create our IOS-XR class that inherits the `GenericNetconfDriver` and create a method that filters out the running configuration for the interfaces. This vendor specific class will need all the relevant arguments + keyworded arguments passed into our `GenericNetconfDriver` which can be solved using the `super()` method like below:
 
-[device_drivers\netconf\vendors\cisco.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/iosxr_netconf_driver_1.py)
+[device_drivers\netconf\vendors\cisco.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/iosxr_netconf_driver_1.py)
 ```
 from device_drivers.netconf.generic import GenericNetconfDriver
 
@@ -138,9 +138,9 @@ class IOSXRNetconfDriver(GenericNetconfDriver):
         super().__init__(*args, **kwargs)
 ```
 
-Our next test script ([test_iosxr.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/test_iosxr.py)) will look exactly the same as the original test.py in the root directory but will import this new `IOSXRNetconfDriver`. Let's implement functionality to filter the interfaces per IOS-XR XML structure:
+Our next test script ([test_iosxr.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/test_iosxr.py)) will look exactly the same as the original test.py in the root directory but will import this new `IOSXRNetconfDriver`. Let's implement functionality to filter the interfaces per IOS-XR XML structure:
 
-[device_drivers\netconf\vendors\cisco.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/iosxr_netconf_driver_2.py)
+[device_drivers\netconf\vendors\cisco.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/iosxr_netconf_driver_2.py)
 ```
 def get_interfaces_config(self) -> str:
     xml_filter = """
@@ -178,9 +178,9 @@ The XML namespaces can be found looking at the YANG models, Cisco IOS-XR are sti
  </data>
 ```
 
-What if you're using a few vendors that all support the OpenConfig interfaces model? OpenConfig should be considered `generic` in our case, however we will still create a separate Python class. Remember that the full structure of the code is available within the [lab-configs directory](../lab-configs/2022-08-02-python-netconf-for-network-engineers/).
+What if you're using a few vendors that all support the OpenConfig interfaces model? OpenConfig should be considered `generic` in our case, however we will still create a separate Python class. Remember that the full structure of the code is available within the [lab-configs directory](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/).
 
-[device_drivers\netconf\openconfig.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/openconfig_netconf_driver_1.py)
+[device_drivers\netconf\openconfig.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/openconfig_netconf_driver_1.py)
 ```
 from device_drivers.netconf.generic import GenericNetconfDriver
 
@@ -203,7 +203,7 @@ class OpenConfigDriver(GenericNetconfDriver):
 
 We can extend this existing method so that whoever imports this module and uses it, can define a specific list of interfaces they want to filter. Let's add a separate method called `get_interface_config` which takes an argument to filter the interface name.
 
-[device_drivers\netconf\openconfig.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/openconfig_netconf_driver_2.py)
+[device_drivers\netconf\openconfig.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/openconfig_netconf_driver_2.py)
 ```
 def get_interface_config(self, interface: str) -> str:
     xml_filter = f"""
@@ -219,7 +219,7 @@ def get_interface_config(self, interface: str) -> str:
     return response.data_xml
 ```
 
-Running the [test script located here](../lab-configs/2022-08-02-python-netconf-for-network-engineers/test_openconfig_interface.py) now presents us with the data for a specific interface.
+Running the [test script located here](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/test_openconfig_interface.py) now presents us with the data for a specific interface.
 
 ```
 python .\test_openconfig_interface.py --host 192.0.2.1 --username myUsername --password myPassword --interface TwentyFiveGigE0/0/0/29
@@ -245,7 +245,7 @@ python .\test_openconfig_interface.py --host 192.0.2.1 --username myUsername --p
 
 So far, we're moving at a really fast pace and I haven't exactly explained why are we making it so complicated? Why not just have separate scripts per vendor instead of doing all this non-network engineer friendly OOP and class inheritance. Take a scenario where we actually want to ensure our `get_config()` response no matter the vendor, returns us a python dictionary instead of working with an XML string and having to perform things like xpath filters. We could simply use a python module to get the XML into a dictionary however this handles no data validation (eg. 1 interface entry might be converted to a dictionary but us humans, know "interfaces" -> "interface" that each interface must be a separate list entry... if we use a module like `xmltodict` (install it using `pip install xmltodict`), it won't be able to figure this out for us). I'll demonstrate this by firstly, implementing a `get_config` method for our `GenericNetconfDriver` which will perform all this logic, then we will change our IOSXR and OpenConfig drivers to use `self.get_config` (our own method) instead of `self.session.get_config` (the ncclient method).
 
-[device_drivers/netconf/generic.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/generic_netconf_driver_3.py)
+[device_drivers/netconf/generic.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/generic_netconf_driver_3.py)
 ```
 from xmltodict import parse
 
@@ -258,7 +258,7 @@ def get_config(self, *args, **kwargs) -> dict:
 
 Because we have some logic in our vendor specific drivers to return the `.data_xml` of the response, we need to edit multiple functions. This is why its best to keep all the logic in the `generic.py` which relates to parsing and interacting with the ncclient objects like the NetconfResponse. In this case we will edit our `OpenConfigNetconfDriver` methods.
 
-[device_drivers/netconf/openconfig.py](../lab-configs/2022-08-02-python-netconf-for-network-engineers/openconfig_netconf_driver_3.py)
+[device_drivers/netconf/openconfig.py](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/openconfig_netconf_driver_3.py)
 ```
 def get_interfaces_config(self) -> str:
     xml_filter = """
@@ -443,7 +443,7 @@ So as per Openconfig model, this data is actually invalid, and you wonder why pe
 
 ![Is it me or you](../img/2022-08-02-python-netconf-for-network-engineers/isityouorme.jpg)
 
-At this point, I'm burned out with this blog. You can find the full python files for this project [here](../lab-configs/2022-08-02-python-netconf-for-network-engineers/full_project/) which includes all the test scripts to print data for IOS-XR and Openconfig yang models. That ipv6 part has really pissed me off at this point of the blog and is one of the reasons why I reinvent the wheel in my own scripts and create my own generic driver per vendor and extend it using Python classes. Validation is still something we haven't covered but I actually do all my validation using Pydantic models, a introduction to Pydantic [can be found here](https://pydantic-docs.helpmanual.io/). It heavily depends on python type annotations like this:
+At this point, I'm burned out with this blog. You can find the full python files for this project [here](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-08-02-python-netconf-for-network-engineers/full_project/) which includes all the test scripts to print data for IOS-XR and Openconfig yang models. That ipv6 part has really pissed me off at this point of the blog and is one of the reasons why I reinvent the wheel in my own scripts and create my own generic driver per vendor and extend it using Python classes. Validation is still something we haven't covered but I actually do all my validation using Pydantic models, a introduction to Pydantic [can be found here](https://pydantic-docs.helpmanual.io/). It heavily depends on python type annotations like this:
 
 ```
 from typing import Optional
