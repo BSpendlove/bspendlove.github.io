@@ -69,157 +69,157 @@ Based on this Inner VPN label, the router can push the traffic into our VRF, not
 
 Now that we have explored some EVPN basics, let's dive into the anycast functionality before discussing the VM mobility/mac moving between different PEs.
 
- 1. Create the EVPN EVI
+1. Create the EVPN EVI
 
-```
-evpn
- evi 1
-  bgp
-   rd 10.255.255.1:41000
-   route-target import 12345:41000
-   route-target export 12345:41000
-  !
-  control-word-disable
-  advertise-mac
-  !
-  unknown-unicast-suppression
-```
+    ```
+    evpn
+    evi 1
+      bgp
+      rd 10.255.255.1:41000
+      route-target import 12345:41000
+      route-target export 12345:41000
+      !
+      control-word-disable
+      advertise-mac
+      !
+      unknown-unicast-suppression
+    ```
 
- 2. Create the VRF, here we will just enable ipv4
+2. Create the VRF, here we will just enable ipv4
 
-```
-vrf VRF-IRB-MGMT
- address-family ipv4 unicast
-  import route-target
-   12345:41000
-  !
-  export route-target
-   12345:41000
-```
+    ```
+    vrf VRF-IRB-MGMT
+    address-family ipv4 unicast
+      import route-target
+      12345:41000
+      !
+      export route-target
+      12345:41000
+    ```
 
- 3. Create the BVI which will act as our Layer 3 termination for the VM, this will be the anycast IP address configured at every data center
+3. Create the BVI which will act as our Layer 3 termination for the VM, this will be the anycast IP address configured at every data center
 
-```
-interface BVI13
- host-routing
- vrf VRF-IRB-MGMT
- ipv4 address 10.0.0.1 255.255.255.0
-!
-```
+    ```
+    interface BVI13
+    host-routing
+    vrf VRF-IRB-MGMT
+    ipv4 address 10.0.0.1 255.255.255.0
+    !
+    ```
 
- 4. Create the bridge domain and tie the relevant interfaces connected to the VM/hypervisor + EVI + VRF
+4. Create the bridge domain and tie the relevant interfaces connected to the VM/hypervisor + EVI + VRF
 
-```
-l2vpn
- bridge group EVPN-BVIS
-  bridge-domain BD-13
-   interface Bundle-Ether12345.13
-   !
-   routed interface BVI13
-   !
-   evi 1
-```
+    ```
+    l2vpn
+    bridge group EVPN-BVIS
+      bridge-domain BD-13
+      interface Bundle-Ether12345.13
+      !
+      routed interface BVI13
+      !
+      evi 1
+    ```
 
- 5. Enable VPNv4 and l2vpn evpn families in the BGP configuration and between both PE routers via neighbor statements (or in your neighbor-group)
+5. Enable VPNv4 and l2vpn evpn families in the BGP configuration and between both PE routers via neighbor statements (or in your neighbor-group)
 
-```
-router bgp 12345
- address-family vpnv4 unicast
- !
- address-family l2vpn evpn
- !
- neighbor 10.255.255.2
-  remote-as 12345
-  update-source Loopback0
-  !
-  address-family vpnv4 unicast
-  !
-  address-family l2vpn evpn
-  !
-```
+    ```
+    router bgp 12345
+    address-family vpnv4 unicast
+    !
+    address-family l2vpn evpn
+    !
+    neighbor 10.255.255.2
+      remote-as 12345
+      update-source Loopback0
+      !
+      address-family vpnv4 unicast
+      !
+      address-family l2vpn evpn
+      !
+    ```
 
- 6. Verify BGP/EVPN tables
+6. Verify BGP/EVPN tables
 
-```
-#show evpn evi vpn-id 1 mac aaaa.aa11.1111
+    ```
+    #show evpn evi vpn-id 1 mac aaaa.aa11.1111
 
-VPN-ID     Encap      MAC address    IP address                               Nexthop                                 Label   
----------- ---------- -------------- ---------------------------------------- --------------------------------------- --------
-1          MPLS       aaaa.aa11.1111 10.0.0.12                                10.255.255.2                            24018
-```
+    VPN-ID     Encap      MAC address    IP address                               Nexthop                                 Label   
+    ---------- ---------- -------------- ---------------------------------------- --------------------------------------- --------
+    1          MPLS       aaaa.aa11.1111 10.0.0.12                                10.255.255.2                            24018
+    ```
 
-```
-#show bgp l2vpn evpn rd 12345:41000 [2][0][48][aaaa.aa11.1111][32][10.0.0.12]/136 detail
+    ```
+    #show bgp l2vpn evpn rd 12345:41000 [2][0][48][aaaa.aa11.1111][32][10.0.0.12]/136 detail
 
-BGP routing table entry for [2][0][48][aaaa.aa11.1111][32][10.0.0.12]/136, Route Distinguisher: 12345:41000
-Versions:
-  Process           bRIB/RIB  SendTblVer
-  Speaker            2384727     2384727
-    Flags: 0x00041001+0x00010000; 
-Last Modified: Sep  7 13:40:00.085 for 1w0d
-Paths: (3 available, best #2)
-  Advertised to update-groups (with more than one peer):
-    0.3 0.4 
-  Path #2: Received by speaker 0
-  Flags: 0x2000020085060205, import: 0x9f, EVPN: 0x3
-  Advertised to update-groups (with more than one peer):
-    0.3 0.4 
-  Local, (Received from a RR-client)
-    10.255.255.2 (metric 33) from 10.255.255.2 (10.255.255.2), if-handle 0x00000000
-      Received Label 24018, Second Label 24023
-      Origin IGP, localpref 100, valid, internal, best, group-best, import-candidate, imported, rib-install
-      Received Path ID 0, Local Path ID 1, version 18941
-      Extended community: Flags 0x1e: SoO:10.255.255.2:1 EVPN MAC Mobility:0x00:3 0x060e:0000.0000.000d RT:12345:41000 
-      EVPN ESI: 0000.0000.0000.0000.0000
-      Source AFI: L2VPN EVPN, Source VRF: BD-13, Source Route Distinguisher: 12345:41000
-```
+    BGP routing table entry for [2][0][48][aaaa.aa11.1111][32][10.0.0.12]/136, Route Distinguisher: 12345:41000
+    Versions:
+      Process           bRIB/RIB  SendTblVer
+      Speaker            2384727     2384727
+        Flags: 0x00041001+0x00010000; 
+    Last Modified: Sep  7 13:40:00.085 for 1w0d
+    Paths: (3 available, best #2)
+      Advertised to update-groups (with more than one peer):
+        0.3 0.4 
+      Path #2: Received by speaker 0
+      Flags: 0x2000020085060205, import: 0x9f, EVPN: 0x3
+      Advertised to update-groups (with more than one peer):
+        0.3 0.4 
+      Local, (Received from a RR-client)
+        10.255.255.2 (metric 33) from 10.255.255.2 (10.255.255.2), if-handle 0x00000000
+          Received Label 24018, Second Label 24023
+          Origin IGP, localpref 100, valid, internal, best, group-best, import-candidate, imported, rib-install
+          Received Path ID 0, Local Path ID 1, version 18941
+          Extended community: Flags 0x1e: SoO:10.255.255.2:1 EVPN MAC Mobility:0x00:3 0x060e:0000.0000.000d RT:12345:41000 
+          EVPN ESI: 0000.0000.0000.0000.0000
+          Source AFI: L2VPN EVPN, Source VRF: BD-13, Source Route Distinguisher: 12345:41000
+    ```
 
- 7. Verify forwarding information
+7. Verify forwarding information
 
-```
-#show route vrf VRF-IRB-MGMT 10.0.0.12/32 detail
+    ```
+    #show route vrf VRF-IRB-MGMT 10.0.0.12/32 detail
 
-Routing entry for 10.0.0.12/32
-  Known via "bgp 12345", distance 200, metric 0, type internal
-  Routing Descriptor Blocks
-    10.255.255.2, from 10.255.255.2
-      Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
-      Route metric is 0
-      Label: 0x5dd7 (24023)
-      Tunnel ID: None
-      Binding Label: None
-      Extended communities count: 1
-        SoO:10.255.255.2:1
-      NHID:0x0(Ref:0)
-      MPLS eid:0xffffffffffffffff
-  Route version is 0x11 (17)
-  No local label
-  IP Precedence: Not Set
-  QoS Group ID: Not Set
-  Flow-tag: Not Set
-  Fwd-class: Not Set
-  Route Priority: RIB_PRIORITY_RECURSIVE (12) SVD Type RIB_SVD_TYPE_REMOTE
-  Download Priority 3, Download Version 120
-  No advertising protos.
+    Routing entry for 10.0.0.12/32
+      Known via "bgp 12345", distance 200, metric 0, type internal
+      Routing Descriptor Blocks
+        10.255.255.2, from 10.255.255.2
+          Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
+          Route metric is 0
+          Label: 0x5dd7 (24023)
+          Tunnel ID: None
+          Binding Label: None
+          Extended communities count: 1
+            SoO:10.255.255.2:1
+          NHID:0x0(Ref:0)
+          MPLS eid:0xffffffffffffffff
+      Route version is 0x11 (17)
+      No local label
+      IP Precedence: Not Set
+      QoS Group ID: Not Set
+      Flow-tag: Not Set
+      Fwd-class: Not Set
+      Route Priority: RIB_PRIORITY_RECURSIVE (12) SVD Type RIB_SVD_TYPE_REMOTE
+      Download Priority 3, Download Version 120
+      No advertising protos.
 
-#show cef vrf VRF-IRB-MGMT 10.0.0.12/32
-10.0.0.12/32, version 120, internal 0x5000001 0x30 (ptr 0x933a72a8) [1], 0x0 (0x0), 0xa08 (0x981bac48)
- Prefix Len 32, traffic index 0, precedence n/a, priority 3
-  gateway array (0x92def2a0) reference count 17, flags 0x2038, source rib (7), 0 backups
-                [1 type 1 flags 0x40441 (0x9821cb98) ext 0x0 (0x0)]
-  LW-LDI[type=0, refc=0, ptr=0x0, sh-ldi=0x0]
-   via 10.255.255.2/32, 9 dependencies, recursive [flags 0x6000]
-    path-idx 0 NHID 0x0 [0x9831d578 0x0]
-    recursion-via-/32
-    next hop VRF - 'default', table - 0xe0000000
-    next hop 10.255.255.2/32 via 20502/0/21
-     next hop 10.255.254.89/32 Hu0/0/0/7    labels imposed {22002 24023}
+    #show cef vrf VRF-IRB-MGMT 10.0.0.12/32
+    10.0.0.12/32, version 120, internal 0x5000001 0x30 (ptr 0x933a72a8) [1], 0x0 (0x0), 0xa08 (0x981bac48)
+    Prefix Len 32, traffic index 0, precedence n/a, priority 3
+      gateway array (0x92def2a0) reference count 17, flags 0x2038, source rib (7), 0 backups
+                    [1 type 1 flags 0x40441 (0x9821cb98) ext 0x0 (0x0)]
+      LW-LDI[type=0, refc=0, ptr=0x0, sh-ldi=0x0]
+      via 10.255.255.2/32, 9 dependencies, recursive [flags 0x6000]
+        path-idx 0 NHID 0x0 [0x9831d578 0x0]
+        recursion-via-/32
+        next hop VRF - 'default', table - 0xe0000000
+        next hop 10.255.255.2/32 via 20502/0/21
+        next hop 10.255.254.89/32 Hu0/0/0/7    labels imposed {22002 24023}
 
-    Load distribution: 0 (refcount 1)
+        Load distribution: 0 (refcount 1)
 
-    Hash  OK  Interface                 Address
-    0     Y   recursive                 22002/0
-```
+        Hash  OK  Interface                 Address
+        0     Y   recursive                 22002/0
+    ```
 
 Now that we have a base configuration for our anycast distributed gateway, lets talk about MAC mobility, MAC move or VM mobility... How do we ensure that when we move a device to another PE (another data center), this MAC address advertised back into the network is preferred and that no PE will attempt to forward data to the old PE (DC1). This is also defined within the same RFC mentioned earlier under section 15 "MAC mobility". An extended community attribute is added which contains a sequence number, this sequence number essentially allows us to determine which MAC+IP route is "newer" and more preferred therefore we can determine the MAC address has moved from 1 PE to another and the route with a higher sequence number should be installed into the forwarding plane. If you take a look at step 6 above, a specific line states this extended attribute `EVPN MAC Mobility:0x00:3` under the BGP route.
 
