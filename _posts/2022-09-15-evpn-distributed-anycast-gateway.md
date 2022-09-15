@@ -69,7 +69,7 @@ Based on this Inner VPN label, the router can push the traffic into our VRF, not
 
 Now that we have explored some EVPN basics, let's dive into the anycast functionality before discussing the VM mobility/mac moving between different PEs.
 
-1. Create the EVPN EVI
+ 1. Create the EVPN EVI
 
 ```
 evpn
@@ -85,7 +85,7 @@ evpn
   unknown-unicast-suppression
 ```
 
-2. Create the VRF, here we will just enable ipv4
+ 2. Create the VRF, here we will just enable ipv4
 
 ```
 vrf VRF-IRB-MGMT
@@ -97,7 +97,7 @@ vrf VRF-IRB-MGMT
    12345:41000
 ```
 
-3. Create the BVI which will act as our Layer 3 termination for the VM, this will be the anycast IP address configured at every data center
+ 3. Create the BVI which will act as our Layer 3 termination for the VM, this will be the anycast IP address configured at every data center
 
 ```
 interface BVI13
@@ -107,7 +107,7 @@ interface BVI13
 !
 ```
 
-4. Create the bridge domain and tie the relevant interfaces connected to the VM/hypervisor + EVI + VRF
+ 4. Create the bridge domain and tie the relevant interfaces connected to the VM/hypervisor + EVI + VRF
 
 ```
 l2vpn
@@ -120,7 +120,7 @@ l2vpn
    evi 1
 ```
 
-5. Enable VPNv4 and l2vpn evpn families in the BGP configuration and between both PE routers via neighbor statements (or in your neighbor-group)
+ 5. Enable VPNv4 and l2vpn evpn families in the BGP configuration and between both PE routers via neighbor statements (or in your neighbor-group)
 
 ```
 router bgp 12345
@@ -138,7 +138,7 @@ router bgp 12345
   !
 ```
 
-6. Verify BGP/EVPN tables
+ 6. Verify BGP/EVPN tables
 
 ```
 #show evpn evi vpn-id 1 mac aaaa.aa11.1111
@@ -174,7 +174,7 @@ Paths: (3 available, best #2)
       Source AFI: L2VPN EVPN, Source VRF: BD-13, Source Route Distinguisher: 12345:41000
 ```
 
-7. Verify forwarding information
+ 7. Verify forwarding information
 
 ```
 #show route vrf VRF-IRB-MGMT 10.0.0.12/32 detail
