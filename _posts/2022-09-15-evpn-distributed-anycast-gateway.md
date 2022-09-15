@@ -5,7 +5,7 @@ subtitle: VM mobility makes life easy
 comments: true
 ---
 
-VM mobility (or MAC mobility, you'll find different names around from various vendors) essentially allows us to move a device connected to a PE to another PE within the network without having to perform configuration changes on the device itself, for example take the below topology where we have virtual machines located in different data centers with segmented by layer 3, each VM being in a different layer 3 network along with different gateways configured on the underlying operating system:
+VM mobility (or MAC mobility, you'll find different names around from various vendors) essentially allows us to move a device connected to a PE to another PE within the network without having to perform configuration changes on the device itself, for example take the below topology where we have virtual machines located in different data centers which are segmented via layer 3, each VM being in a different layer 3 network along with different gateways configured on the underlying operating system:
 
 ![Hosts in multiple DCs with different subnets/gateways](/img/2022-09-15-evpn-distributed-anycast-gateway/poor_mobility.PNG)
 
