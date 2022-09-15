@@ -1,6 +1,6 @@
 ---
 layout: post
-title: EVPN Distributed Anycast Gateway for VM mobility in a service provider
+title: EVPN Distributed Anycast Gateway for VM/MAC mobility
 subtitle: VM mobility makes life easy
 comments: true
 ---
