@@ -55,7 +55,7 @@ Basic workflow for this will look something along these lines:
 
 ![Lab Topology](/img/2022-07-10-bng-wholesale-layer-2/lab_topology.PNG)
 
-All final configurations can be found here: `LINK-HERE-PLZ`
+All final configurations can be found here: [Configurations](https://github.com/BSpendlove/bspendlove.github.io/tree/master/lab-configs/2022-07-17-bng-wholesale-demo-part-2)
 
 ## Building the Lab together
 
