@@ -375,7 +375,7 @@ rlm_sql (sql): Released connection (0)
 ```
 
 Wireshark Access-Accept packet sent back to BNG
-![RADIUS Access-Accept for ISP2](/img/2022-07-17-bng-wholesale-demo-part-2/freeradius_isp_2_access_accept.PNG)
+![RADIUS Access-Accept for ISP2](/img/2022-07-17-bng-wholesale-demo-part-2/freeradius_isp_2_access_accept_wireshark.PNG)
 
 ```
 RP/0/RP0/CPU0:BNG-1#show subscriber session all detail internal
