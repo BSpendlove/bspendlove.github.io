@@ -1,0 +1,33 @@
+---
+layout: post
+title: Pretending you are an IX - NOT FINISHED
+subtitle: Pretending is fun, here we pretend we are an IX providing a peering LAN and need to expose network insights to our customers
+comments: true
+---
+
+How would I expose network insights to customers on my peering LAN? I'd simply build some multi-tenancy framework that allows people to log in and view their port based services and give them all the information (or a subset of information) from the network devices using something like SNMP or Telemetry. If you like SNMP then stop reading, if you don't like SNMP then continue reading and join me in building a half-arsed, security riddled, mega exploitable frontend which shouldn't be used in production. Before we continue, I do not work for an IX or foresee me working in an IX so take this blog post with a grain of salt.
+
+An IX (or IXP), whatever you want to call it is a place located typically in a large city (because who wants to peer with just 1 or 2 people in small cities/towns?) which people join to essentially peer with each other, sharing BGP routes to avoid going over the larger transits and typically reducing ingress and egress traffic through the network where you typically get charged per Mbps (Upstream transits, Tier 1s, Tiers 2s etc...). Most if not all IXes are hosted by an association whom will charge on a port basis (and the speed of that port) but then its up to you (any the other party) to agree on a peering to share routes so that traffic from your network flows over the IX peering LAN to the 3rd party and vice versa. Essentially the IX provider is providing the switching fabric and connecting people together from a layer 2 perspective, now you don't have to purchase cross connects (which are typically cables going between 1 rack and another rack in the datacenter) to all these companies that you can simply benefit via bringing up a BGP session on the peering LAN and sending traffic to prefixes advertised by them via that IX interface.
+
+Lets take a step back and try to pretend we are the IX provider, we have created a peering LAN (aka this switching fabric) for customers to pay for a 10G or 100G port, and we simply switch traffic throughout this network so that Customer 1 can speak to Customer 2, agree on peering with each other to share prefixes originated in their own ASNs and then finally providing network insights to the peering LAN for the sake of it (customers will obviously monitor their own interfaces in terms of traffic usage, you would have thought so):
+
+![Peering LAN Example](../img/2023-02-16-pretending-your-an-IX/peering_lan_example.png)
+
+In terms of our IX network during this blog, we have a simple spine-leaf architecture where customer 1 is located on leaf-1 and customer 2 is located on leaf-2, EVPN-VXLAN is used to extend the connectivity between these customers so that if they would like to peer with each other, then we don't need to get involved and they can agree upon each other to establish BGP peerings by requesting to peer and provide each other with relevant details such as IPv4 and IPv6 address on the IX network and any additional information like BGP MD5 passwords. (Real configuration does not reflect vxlan, to make it simple we will just create layer 3 interconnects and allow eBGP multihop)
+
+We will collect traffic statistics from these leaf routers using Telemetry dial-out (IOS-XRd used in this lab), collected by a telegraf container which will store all the data into an InfluxDB database. There are a few other methods to do this such as streaming the telemetry using the telemetry daemon apart of the pmacct suite of tools, sending the telemetry data into a message queueing system like Kafka or RabbitMQ and then distributing that workload to multiple workers to store it into databases (or multiple databases if you're trying to do replication to multiple database region zones). However in this post, telegraf is very straight forward to setup with the use of InfluxDB.
+
+![Collection Example](../img/2023-02-16-pretending-your-an-IX/telemetry_collection.png)
+
+So my initial thought is, we simply create some service that can act as an API endpoint for our frontend that can correlate the devices/interfaces which the customers services are located on, and return that information whether it be directly from the database or somehow enrich the existing data with tags and return the full information regarding traffic statistics for a given period of time when the IX member requests that information either via an API call or through the frontend dashboard.
+
+Here are a few questions I'd like to ask you and myself:
+
+1) How can we differentiate the different ports in monitoring and only allow access to the ports Customer 1 has purchased without other customers?
+2) How can we ensure our frontend application only allows Customer 1 to access their ports without accessing our IX network?
+3) If a customer upgrades a port, how do we track that on the telemetry monitoring systems in the backend?
+4) Do we create some kind of microservice that sits besides the correlation FastAPI worker which is constantly inspecting the database and enriching the relevant database entries with data related to the customer so that we can simply search based on a tag/field?
+
+### Getting started with the lab
+
+In the lab, I'm using containerlab with 5 nodes with their management interfaces connected to my network so they can export the telemetry data into a container I'm running on Ubuntu. Below you can find snippets of the configuration used on S1, S2, L1, L2 and L3. We've also connected another customer on L2 just to experiment a bit more as the blog goes on. I'm writing this post without even starting the lab or writing the configuration and already suspect this will be a very long post so I will try to keep it as entertaining as I can, apologies if it goes dry at times!
