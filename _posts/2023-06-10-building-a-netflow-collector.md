@@ -452,3 +452,125 @@ After writing this blog, the template replication idea in `Final Thoughts` secti
 
 `nfacctd_templates_receiver` = Specify a destination where to copy NetFlow v9/IPFIX templates to
 `nfacctd_templates_port` = Specify a port where to listen from templates
+
+Working example for this type of configuration:
+
+![Working Architecture for Template Replicator and NGINX Load Balancer](../img/2023-06-10-building-a-netflow-collector/working_replication_scale.png)
+
+docker-compose.yml
+```
+version: "3.8"
+
+services:
+  netflow_collector_a:
+    image: pmacct/nfacctd:latest
+    restart: unless-stopped
+    volumes:
+      - ./nfacctd_collector.conf:/etc/pmacct/nfacctd.conf:ro
+    depends_on:
+      - nfdb
+
+  netflow_collector_b:
+    image: pmacct/nfacctd:latest
+    restart: unless-stopped
+    volumes:
+      - ./nfacctd_collector.conf:/etc/pmacct/nfacctd.conf:ro
+    depends_on:
+      - nfdb
+
+  netflow_replicator:
+    image: pmacct/nfacctd:latest
+    restart: unless-stopped
+    volumes:
+      - ./nfacctd_replicator.conf:/etc/pmacct/nfacctd.conf:ro
+      - ./receivers.lst:/etc/pmacct/receivers.lst
+
+  nflb:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 9995:9995/udp
+
+  nfdb:
+    image: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    env_file:
+      - ./envs/mysql.env
+    volumes:
+      - ./database-init:/docker-entrypoint-initdb.d
+      - ./db:/var/lib/mysql
+
+```
+
+nginx.conf
+```
+events {}
+
+stream {
+    upstream nf_servers {
+        server netflow_collector_a:9995;
+        server netflow_collector_b:9995;
+    }
+
+    server {
+        listen 9995 udp;
+
+        proxy_pass nf_servers;
+    }
+}
+```
+
+nfacctd_collector.conf
+```
+daemonize: false
+debug: true
+nfacctd_port: 9995
+nfacctd_time_new: true
+
+! Replicator for Template propagation
+nfacctd_templates_receiver: netflow_replicator:9996
+nfacctd_templates_port: 20001
+
+
+plugins: mysql[test]
+
+aggregate: src_host, dst_host, src_port, dst_port, tcpflags, proto
+
+sql_optimize_clauses: true
+sql_refresh_time: 30
+sql_history: 10m
+sql_table_version: 9
+
+sql_host[test]: nfdb
+sql_port[test]: 3306
+sql_user[test]: pmacct
+sql_passwd[test]: arealsmartpwd
+```
+
+nfacctd_replicator.conf
+```
+daemonize: false
+debug: true
+nfacctd_port: 9996
+nfacctd_time_new: true
+
+plugins: tee[a] print[b]
+
+print_output: json
+tee_receivers[a]: /etc/pmacct/receivers.lst
+tee_transparent[a]: true
+```
+
+receivers.lst
+```
+id=1   ip=netflow_collector_a:20001,netflow_collector_b:20001
+```
+
+
+Example of 2 collectors processing different netflow packets because they were load balanced:
+
+![Example 2 collectors](../img/2023-06-10-building-a-netflow-collector/load_balance_example.png)
