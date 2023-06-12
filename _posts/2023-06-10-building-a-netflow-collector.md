@@ -226,6 +226,36 @@ Let's take a real scenario, an IPv4 DNS response from OpenDNS:
 
 Now we get into the realms of trying to average the row size of different types of traffic, a simple DNS request which may be lightweight will not have the same flow values for downloading a game or a flow which contains large payloads, increasing the packets the longer the flow and increasing the bytes the larger the file being downloaded/uploaded. I ill update this section in a few days when I have some data as my MySQL buffer pool is set to 128MB, after running this setup for 24 hours it didn't reach it so I should be able to determine the average storage from flows per minute (capturing mysql stats every minute on my Grafana/Prometheus setup).
 
+#### Few Hours of logs
+
+- First entry = 2023-06-11 21:10:00
+- Last Entry = 2023-06-12 00:53:00
+- Total number of records = 13195
+- Total time = 3hr 43 mins (223 minutes)
+
+Obviously don't do this in production because its not a great way to determine your average but in our case, we have around 59 records on average per minute.
+
+The total size of our database table is 17833984 Bytes (17.8MB) if I check on disk, divide by 13195 total netflow entries in the database I get an average of 1351 bytes which is well above our "worse case scenario" @ 123 bytes. Anyway, probably something I am doing... If I change the database table `ROW_FORMAT` to `COMPRESSED` then it ends up being 7348224 bytes which is equal to an average of 556.89 bytes per row. Should I dare say changing the format compressed our single record by 58.68%?
+
+Let's pretend our netflow exporter captures around 1 million flows per second with a 1:100 export ratio (so 100k flows) but lets take our worst case scenario, because I refuse to believe a single row takes up 556.89 bytes, I'll be nice and say 185 Bytes (this doesn't include indexing which should be factored in):
+
+Without compression:
+
+- Avg storage per Second: 100k FPS * 185 bytes = 17.64MB
+- Avg storage per Minute: 17.64MB * 60 seconds = 1.05GB
+- Avg storage per Day: 1.05GB * 60 mins * 24 hours = 1,512GB (1.47TB)
+- Avg storage per Month: 1.47TB * 30 days = 44.1TB
+- Avg Storage per Year: 45TB * 12 = 529.2TB
+- Avg Storage for 3 years: 529.2TB * 3 = 1587.6TB (1.55PB)
+
+With compression (58.68% baseline):
+- Avg storage per Second = 10.35MB
+- Avg storage per Minute = 630.92MB
+- Avg storage per Day = 887.24GB
+- Avg storage per Month = 25.87TB
+- Avg Storage per Year = 310.53TB
+- Avg Storage for 3 years = 931.6TB
+
 ### Storing the values in a database (MySQL)
 
 Let's move on and build the MySQL database, connect our single instance of pmacct and leave it running for a bit. I will also create a Grafana dashboard to show us some db stats.
