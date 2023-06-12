@@ -5,7 +5,7 @@ subtitle: Collecting flow logs and storing them efficiently
 comments: true
 ---
 
-> I apologize in advanced for the amount of images and config snippets, I prefer images over text... :-)
+> I apologize in advance for the amount of images and config snippets, I prefer images over text... :-)
 
 I want to build a system that collects flow logs using multiple collectors, stores those logs in a database and then compress that data after a given time. Here is the basic architecture that we will be going for:
 
