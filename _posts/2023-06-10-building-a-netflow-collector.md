@@ -256,6 +256,11 @@ With compression (58.68% baseline):
 - Avg Storage per Year = 310.53TB
 - Avg Storage for 3 years = 931.6TB
 
+
+**UPDATE**: as of 17/06/2023, my db is now 149MB with 468,758 records. According to our last conversions using compressed rows @ 556.89 bytes per row, I should be around 261MB by now on average if I kept to the same amount of flows being initiated within my home lab however only few devices have been running and creating flows. Some Grafana stats below on network traffic and internal memory overview:
+
+![Grafana Stats](../img/2023-06-10-building-a-netflow-collector/grafana_stats.png)
+
 ### Storing the values in a database (MySQL)
 
 Let's move on and build the MySQL database, connect our single instance of pmacct and leave it running for a bit. I will also create a Grafana dashboard to show us some db stats.
