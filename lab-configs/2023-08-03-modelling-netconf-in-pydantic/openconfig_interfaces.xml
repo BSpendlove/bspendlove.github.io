@@ -1,0 +1,388 @@
+<?xml version="1.0" ?><data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"> 
+   <interfaces xmlns="http://openconfig.net/yang/interfaces">  
+     <interface>   
+       <name>Loopback0</name>   
+       <config>    
+         <name>Loopback0</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:softwareLoopback</type>    
+       </config>    
+     </interface>  
+     <interface>   
+       <name>TenGigE0/0/0/2</name>   
+       <config>    
+         <name>TenGigE0/0/0/2</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TenGigE0/0/0/3</name>   
+       <config>    
+         <name>TenGigE0/0/0/3</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TenGigE0/0/0/4</name>   
+       <config>    
+         <name>TenGigE0/0/0/4</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TenGigE0/0/0/5</name>   
+       <config>    
+         <name>TenGigE0/0/0/5</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TenGigE0/0/0/6</name>   
+       <config>    
+         <name>TenGigE0/0/0/6</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TenGigE0/0/0/7</name>   
+       <config>    
+         <name>TenGigE0/0/0/7</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>HundredGigE0/0/0/0</name>   
+       <config>    
+         <name>HundredGigE0/0/0/0</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>HundredGigE0/0/0/1</name>   
+       <config>    
+         <name>HundredGigE0/0/0/1</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>
+     </interface>  
+     <interface>   
+       <name>MgmtEth0/RP0/CPU0/0</name>   
+       <config>    
+         <name>MgmtEth0/RP0/CPU0/0</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/8</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/8</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/9</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/9</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/10</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/10</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/11</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/11</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/12</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/12</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/13</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/13</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+           <aggregate-id xmlns="http://openconfig.net/yang/interfaces/aggregate">Bundle-Ether3</aggregate-id>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/14</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/14</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/15</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/15</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/16</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/16</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/17</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/17</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/18</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/18</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/19</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/19</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/20</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/20</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/21</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/21</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/22</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/22</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/23</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/23</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/24</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/24</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/25</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/25</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/26</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/26</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/27</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/27</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/28</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/28</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/29</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/29</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/30</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/30</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/31</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/31</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/32</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/32</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+     <interface>   
+       <name>TwentyFiveGigE0/0/0/33</name>   
+       <config>    
+         <name>TwentyFiveGigE0/0/0/33</name>    
+         <type xmlns:idx="urn:ietf:params:xml:ns:yang:iana-if-type">idx:ethernetCsmacd</type>    
+         <enabled>false</enabled>    
+       </config>   
+       <ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">    
+         <config>     
+           <auto-negotiate>false</auto-negotiate>     
+         </config>    
+       </ethernet>   
+     </interface>  
+   </interfaces> 
+ </data>

@@ -1,0 +1,391 @@
+---
+layout: post
+title: Modelling NETCONF/YANG in Pydantic
+subtitle: I love models and I hope models love me
+comments: true
+---
+
+There is nothing better than a good data model in the network automation world. Now this typically refers to building deployable services which are high level and don't get into the depths of the specific YANG model for configuring a specific protocol. There are many good (no... GREAT) tools out there that can automatically convert YANG models to `<insert your favourite language>` but who needs to ingest the full YANG model and configure every corner case knobs? Without bashing any specific tools, I find myself running into problems which are typically:
+
+- Editor support is awful (VSCode autocomplete and/or intellisense)
+- Some tools don't work well with YANG models other than Juniper, Cisco and OpenConfig (always running into unsupported types or yang path validation errors)
+- Other tools require you to compile certain libraries, have C dependencies, don't work on anything other than Python 3.6 or 2.7
+
+I've been a big lover of Pydantic for quite some time ever since I discovered [FastAPI](https://fastapi.tiangolo.com/) after spending many months working with [Flask](https://flask.palletsprojects.com/en/2.3.x/). It's heavily utilized in FastAPI and dumbing it down, a lot of people use it simply as a JSON parser and validator, say if I sent a specific POST request to an API with some data in the body of the request, well FastAPI loads this data into a Python class and simply loads the JSON based on fields, validates input if they are strings, integers, booleans, certain lengths, maybe a predefined option then presents the developer with a python object which can simply be accessed with really nice editor support. Ok it's a bit more than just a bog standard JSON validator but hear me out, if we talk about NETCONF and how a NETCONF server should essentially validate the data based on specific YANG models and return 'useful' errors so that we can catch them and act upon them or at least present to the user.
+
+Some tools I've seen only don't validate the XML directly and only implement JSON encoders, where you need to manually convert the XML into JSON and then pass it into an object or parser which then performs validation against a loaded YANG model(s), xmltodict is a very common one with Python but there is one thing I never see people talk about and that's: `What happens when you try to convert the XML that has a List or Leaf-List but only 1 data entry`. Take this example:
+
+```
+<users>
+     <user>
+       <name>glocks</name>
+       <full-name>Goldie Locks</full-name>
+       <class>intruder</class>
+     </user>
+     <user>
+       <name>snowey</name>
+       <full-name>Snow White</full-name>
+       <class>free-loader</class>
+     </user>
+     <user>
+       <name>rzell</name>
+       <full-name>Rapun Zell</full-name>
+       <class>tower</class>
+     </user>
+</users>
+```
+
+If we take this XML and use xmltodict, this is what we end up with:
+
+```
+import xmltodict
+import json
+
+xml_data = """
+<users>
+     <user>
+       <name>glocks</name>
+       <full-name>Goldie Locks</full-name>
+       <class>intruder</class>
+     </user>
+     <user>
+       <name>snowey</name>
+       <full-name>Snow White</full-name>
+       <class>free-loader</class>
+     </user>
+     <user>
+       <name>rzell</name>
+       <full-name>Rapun Zell</full-name>
+       <class>tower</class>
+     </user>
+</users>
+"""
+
+converted_json = xmltodict.parse(xml_data)
+print(json.dumps(converted_json, indent=4))
+
+# Output:
+{
+    "users": {
+        "user": [
+            {
+                "name": "glocks",
+                "full-name": "Goldie Locks",
+                "class": "intruder"
+            },
+            {
+                "name": "snowey",
+                "full-name": "Snow White",
+                "class": "free-loader"
+            },
+            {
+                "name": "rzell",
+                "full-name": "Rapun Zell",
+                "class": "tower"
+            }
+        ]
+    }
+}
+```
+
+What if we only have 1 user but we know our YANG model defines "users" as a container and "user" as a list, so we know even if we have 1 user, it should be a list with a single item.
+
+```
+xml_data = """
+<users>
+     <user>
+       <name>glocks</name>
+       <full-name>Goldie Locks</full-name>
+       <class>intruder</class>
+     </user>
+</users>
+"""
+
+# Output
+{
+    "users": {
+        "user": {
+            "name": "glocks",
+            "full-name": "Goldie Locks",
+            "class": "intruder"
+        }
+    }
+}
+```
+![wtf](../img/2023-08-03-modelling-netconf-yang-in-pydantic/wtf.jpg)
+
+There is quite a simple fix for this: `converted_json = xmltodict.parse(xml_data, force_list=["user"])`, anyway, lets move on... You get the idea that we can't just blindly grab data from NETCONF, convert the XML to JSON blindly, then hope for the best. That is why the majority of the tools out there will try to implement the basic built-in types for YANG and build a fully fledge parser, however I'm here to present something different using Pydantic models. If we focus on JSON for now as we can load it natively directly into a pydantic model without having to write an XML parser / depend on more third party python packages/modules. If the reader has no clue what Pydantic is, no panic, it's very easy to understand. Let's write the User model above:
+
+example_models.py
+```
+from typing import Optional, List
+from pydantic import BaseModel, Field
+
+
+def normalize_keys(string: str) -> str:
+    """Used to normalize hyphens/underscores when importing
+    and exporting the model
+
+    Args:
+        string:     Data to replace
+    """
+    return string.replace("_", "-")
+
+
+class User(BaseModel):
+    name: str
+    full_name: str
+    class_name: Optional[str] = Field(alias="class")
+
+    class Config:
+        alias_generator = normalize_keys
+        populate_by_name = True # Pydantic V2
+        # allow_population_by_field_name = True # Pydantic V1
+
+
+class Users(BaseModel):
+    user: List[User]
+```
+
+```
+# example.py
+import xmltodict
+from example_models import Users
+
+xml_data = """
+<users>
+     <user>
+       <name>glocks</name>
+       <full-name>Goldie Locks</full-name>
+       <class>intruder</class>
+     </user>
+     <user>
+       <name>snowey</name>
+       <full-name>Snow White</full-name>
+       <class>free-loader</class>
+     </user>
+     <user>
+       <name>rzell</name>
+       <full-name>Rapun Zell</full-name>
+       <class>tower</class>
+     </user>
+</users>
+"""
+
+json_data = xmltodict.parse(xml_data, force_list=["user"])
+my_model = Users.model_validate(json_data["users"])
+print(my_model.model_dump(by_alias=True))
+
+# Output
+{'user': [{'name': 'glocks', 'full-name': 'Goldie Locks', 'class': 'intruder'}, {'name': 'snowey', 'full-name': 'Snow White', 'class': 'free-loader'}, {'name': 'rzell', 'full-name': 'Rapun Zell', 'class': 'tower'}]}
+```
+
+OK, there are a few Pydantic tricks in this model, for example:
+
+1. I needed to create an alias generator so that my variables once dumped to a dictionary/JSON, they are hyphens instead of underscores.
+2. I needed to allow 'populate_by_name' if I want my variable to be populated using the alias variants (eg. hyphens)
+3. I had to use `class_name` because `class` is a variable used in Python itself, then add some metadata (`Field`) so that I could create an alias and import/export data using the true
+variable `class`.
+
+You can populate alias information directly under the `class Config` if you don't want to ruin your pretty model above, but the rest is obvious. `name` has to be a string and it is required, `full_name` also needs to be a string and it is also required however `class_name` (which aliases to `class` remember) is actually an optional attribute but when used MUST be a string.
+Ok let's visit one more example quickly but networking related. I'm going to grab some OpenConfig configuration from a device, if your vendor supports show commands which output XML and the OpenConfig model then follow along, otherwise grab some config from a device on the Cisco devnet sandbox or my example here (I'm going to use this tool I built to help with devs working around netconf called [netconf-tool](https://github.com/BSpendlove/netconf-tool)):
+
+1. pip install netconf-tool
+2. netconf-tool operations get-config --host 127.0.0.1 --username cisco --password cisco --filter '<interfaces xmlns="http://openconfig.net/yang/interfaces"/>'
+
+The captured XML can be found here: ![openconfig_interfaces.xml](../lab-configs/2023-08-03-modelling-netconf-in-pydantic/openconfig_interfaces.xml)
+
+When we start working with XML namespaces, xmltodict will store this meta data like this below:
+
+```
+{
+    "@xmlns": "http://openconfig.net/yang/interfaces",
+    "interface": [
+        {
+            "name": "Loopback0",
+            "config": {
+                "name": "Loopback0",
+                "type": {
+                    "@xmlns:idx": "urn:ietf:params:xml:ns:yang:iana-if-type",
+                    "#text": "idx:softwareLoopback"
+                }
+            }
+        },
+        {
+            "name": "TenGigE0/0/0/2",
+            "config": {
+                "name": "TenGigE0/0/0/2",
+                "type": {
+                    "@xmlns:idx": "urn:ietf:params:xml:ns:yang:iana-if-type",
+                    "#text": "idx:ethernetCsmacd"
+                }
+            }
+        }
+    ]
+}
+```
+
+Let's create a very basic model that stores the interface name for now:
+
+openconfig_interfaces.py
+```
+from typing import List
+from pydantic import BaseModel
+
+
+class Interface(BaseModel):
+    name: str
+
+
+class Interfaces(BaseModel):
+    interface: List[Interface]
+```
+
+```
+# example_2.py
+import xmltodict
+from openconfig_interfaces import Interfaces
+
+with open("openconfig_interfaces.xml") as xmlfile:
+    xml_data = xmlfile.read()
+
+parsed_data = xmltodict.parse(xml_data)["data"]["interfaces"]
+
+oc_interfaces = Interfaces.model_validate(parsed_data)
+print(oc_interfaces)
+
+# Output
+interface=[Interface(name='Loopback0'), Interface(name='TenGigE0/0/0/2'), Interface(name='TenGigE0/0/0/3'), Interface(name='TenGigE0/0/0/4'), Interface(name='TenGigE0/0/0/5'), Interface(name='TenGigE0/0/0/6'), Interface(name='TenGigE0/0/0/7'), Interface(name='HundredGigE0/0/0/0'), Interface(name='HundredGigE0/0/0/1'), Interface(name='MgmtEth0/RP0/CPU0/0'), Interface(name='TwentyFiveGigE0/0/0/8'), Interface(name='TwentyFiveGigE0/0/0/9'), Interface(name='TwentyFiveGigE0/0/0/10'), Interface(name='TwentyFiveGigE0/0/0/11'), Interface(name='TwentyFiveGigE0/0/0/12'), Interface(name='TwentyFiveGigE0/0/0/13'), Interface(name='TwentyFiveGigE0/0/0/14'), Interface(name='TwentyFiveGigE0/0/0/15'), Interface(name='TwentyFiveGigE0/0/0/16'), Interface(name='TwentyFiveGigE0/0/0/17'), Interface(name='TwentyFiveGigE0/0/0/18'), Interface(name='TwentyFiveGigE0/0/0/19'), Interface(name='TwentyFiveGigE0/0/0/20'), Interface(name='TwentyFiveGigE0/0/0/21'), Interface(name='TwentyFiveGigE0/0/0/22'), Interface(name='TwentyFiveGigE0/0/0/23'), Interface(name='TwentyFiveGigE0/0/0/24'), Interface(name='TwentyFiveGigE0/0/0/25'), Interface(name='TwentyFiveGigE0/0/0/26'), Interface(name='TwentyFiveGigE0/0/0/27'), Interface(name='TwentyFiveGigE0/0/0/28'), Interface(name='TwentyFiveGigE0/0/0/29'), Interface(name='TwentyFiveGigE0/0/0/30'), Interface(name='TwentyFiveGigE0/0/0/31'), Interface(name='TwentyFiveGigE0/0/0/32'), Interface(name='TwentyFiveGigE0/0/0/33')]
+```
+
+### Bonus Python Tip
+
+Bit overkill in Python when I can simply use NamedTuples and not use Pydantic?
+
+```
+# example_3.py
+import xmltodict
+from typing import NamedTuple
+
+
+class Interface(NamedTuple):
+    name: str
+
+
+class Interfaces(NamedTuple):
+    interfaces: Interface
+
+
+with open("openconfig_interfaces.xml") as xmlfile:
+    xml_data = xmlfile.read()
+
+parsed_data = xmltodict.parse(xml_data)["data"]["interfaces"]
+
+interfaces = [
+    Interface(name=interface["name"]) for interface in parsed_data["interface"]
+]
+
+print(interfaces)
+
+# Output
+[Interface(name='Loopback0'), Interface(name='TenGigE0/0/0/2'), Interface(name='TenGigE0/0/0/3'), Interface(name='TenGigE0/0/0/4'), Interface(name='TenGigE0/0/0/5'), Interface(name='TenGigE0/0/0/6'), Interface(name='TenGigE0/0/0/7'), Interface(name='HundredGigE0/0/0/0'), Interface(name='HundredGigE0/0/0/1'), Interface(name='MgmtEth0/RP0/CPU0/0'), Interface(name='TwentyFiveGigE0/0/0/8'), Interface(name='TwentyFiveGigE0/0/0/9'), Interface(name='TwentyFiveGigE0/0/0/10'), Interface(name='TwentyFiveGigE0/0/0/11'), Interface(name='TwentyFiveGigE0/0/0/12'), Interface(name='TwentyFiveGigE0/0/0/13'), Interface(name='TwentyFiveGigE0/0/0/14'), Interface(name='TwentyFiveGigE0/0/0/15'), Interface(name='TwentyFiveGigE0/0/0/16'), Interface(name='TwentyFiveGigE0/0/0/17'), Interface(name='TwentyFiveGigE0/0/0/18'), Interface(name='TwentyFiveGigE0/0/0/19'), Interface(name='TwentyFiveGigE0/0/0/20'), Interface(name='TwentyFiveGigE0/0/0/21'), Interface(name='TwentyFiveGigE0/0/0/22'), Interface(name='TwentyFiveGigE0/0/0/23'), Interface(name='TwentyFiveGigE0/0/0/24'), Interface(name='TwentyFiveGigE0/0/0/25'), Interface(name='TwentyFiveGigE0/0/0/26'), Interface(name='TwentyFiveGigE0/0/0/27'), Interface(name='TwentyFiveGigE0/0/0/28'), Interface(name='TwentyFiveGigE0/0/0/29'), Interface(name='TwentyFiveGigE0/0/0/30'), Interface(name='TwentyFiveGigE0/0/0/31'), Interface(name='TwentyFiveGigE0/0/0/32'), Interface(name='TwentyFiveGigE0/0/0/33')]
+```
+
+Ok sure, but when you start working with more attributes/variables and need more complex logic for custom validation then Pydantic becomes much more superior... :-)
+
+### Back to Networking
+
+We haven't specifically created metadata for our Pydantic models to house our XML namespaces, if the NETCONF server has multiple YANG models for two root containers/leafs/lists etc... then we have a clash as we are unable to determine which namespace. During my testing I've been able to send XML without namespace and receive a valid response but [RFC7950 - YANG 1.1](https://datatracker.ietf.org/doc/html/rfc7950#section-5.3) specifically states in section 5.3, "A NETCONF client or server uses the namespace during XML encoding of data.". Let's come back to this on how we can ensure this namespace is exported when we programmatically populate a new Interfaces model and try to export it to JSON.
+
+Note, I am using Pydantic v2 for this post so some methods may be slightly different (eg. dict() vs model_dump()), let's try to populate our model from Netbox using pynetbox. It's a bit useless at the moment so let's implement the config description so we can at least automate that.
+
+openconfig_interfaces.py
+```
+from typing import List, Optional
+from pydantic import BaseModel
+
+
+class InterfaceConfig(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+
+class Interface(BaseModel):
+    name: str
+    config: Optional[InterfaceConfig] = None
+
+
+class Interfaces(BaseModel):
+    interface: List[Interface]
+```
+
+```
+# example_4.py
+import pynetbox
+import xmltodict
+from typing import List
+from pynetbox.models import dcim
+from openconfig_interfaces import Interfaces, Interface
+
+
+def nb_to_openconfig(interfaces: List[dcim.Interfaces]):
+    """Builds OpenConfig Interface model based on Netbox dcim.Interface type"""
+    modelled_interfaces = [
+        Interface(
+            **{
+                "name": interface.name,
+                "config": {
+                    "name": interface.name,
+                    "description": interface.description,
+                },
+            }
+        )
+        for interface in interfaces
+    ]
+    return modelled_interfaces
+
+
+nb = pynetbox.api(
+    url="https://localhost:8080",
+    token="1234567890abcdef1234567890abcdef1234567890",
+)
+device = nb.dcim.devices.get(name="some-device")
+interfaces = nb.dcim.interfaces.filter(device_id=device.id)
+
+oc_interfaces = Interfaces(interface=nb_to_openconfig(interfaces))
+xml_data = xmltodict.unparse(
+    {"interfaces": oc_interfaces.model_dump()}, pretty=True, indent="  "
+)
+print(xml_data)
+
+# Output
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces>
+  <interface>
+    <name>HundredGigE0/0/0/0</name>
+    <config>
+      <name>HundredGigE0/0/0/0</name>
+      <description>some-description:port1</description>
+    </config>
+  </interface>
+  <interface>
+    <name>HundredGigE0/0/0/1</name>
+    <config>
+      <name>HundredGigE0/0/0/1</name>
+      <description>some-description:port2</description>
+    </config>
+  </interface>
+  <interface>
+    <name>TenGigE0/0/0/2</name>
+    <config>
+      <name>TenGigE0/0/0/2</name>
+      <description>some-description:port3</description>
+    </config>
+  </interface>
+</interfaces>
+```
+
+It's starting to kinda look like NETCONF no?
+
+
+EDIT: 2023-12-03 - Sorry if this content is terrible, I initially built it 4 months ago and haven't reviewed it, I need to push to my repository and don't want to hide/delete this post, maybe one day I'll come back to it.. whoooops, lazy me like always... #UDP4LIFE
