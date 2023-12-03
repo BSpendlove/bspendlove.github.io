@@ -9,7 +9,6 @@ I've been using containerlab for quite some time now, I've had ups and downs wit
 
 I've seen very few examples of using containerlab in the CI/CD process and thought it'd be cool to do it myself and write a blog at the same time, so this post will be me in realtime experimenting and trying to solve many issues without going too much into the whole argument on which test framework is better, should I use SSH/NETCONF/RESTCONF or this languages model or that orchestrator, we're going to keep it simple and use Python + Pytest because how easy it is to read for a network engineer with 0 experience with programming/code and then maybe take a look at something like pyATS or robot framework. I'll probably opt to use SSH with Netmiko for the initial testing concept as this tends to be the option everyone goes for when first learning (if it isn't Ansible) before going into NETCONF/RESTCONF/Orchestrators/building their own logic/lifecycle of network configuration. Let's get straight to my thinking process...
 
-
 ## First things first... Infrastructure???
 
 Ok, so what about infrastructure? We want to build a pipeline which spins up an instance of Containerlab, maybe builds an image, we pass a topology file, then start to do things... right? I can already see this being slow, now we're not looking for ultimate speed (because why would we use Python, am I right?) but repeating this process over and over again is going to add time to our pipeline process so the first thing I am thinking is this:
@@ -36,6 +35,8 @@ brandon@container-lab-1:~$ containerlab version
      source: https://github.com/srl-labs/containerlab
  rel. notes: https://containerlab.dev/rn/0.45/#0451
 ```
+
+Note: All configuration and scripts I've created on [this post can be found here](https://github.com/BSpendlove/containerlab-cicd-example).
 
 Let's install the GitHub self-hosted runner and assign it to our repository in GitHub... When you create a repository, you can go into `Settings` -> `Actions` -> `Runners`, click `New self-hosted runner` and run through the process to install it on a host. This then appears as a runner which we can use on our Actions and I'm thinking if its anything like GitLab, we should be able to run shell commands and directly call Containerlab, now it would be nice if we built a custom action that would build containerlab and perform all of this in a separate environment but it's 5:30pm on a Sunday and I fancy getting some sleep tonight, maybe next time I will write another post with this and we'll use everything learned in this post :-)
 
